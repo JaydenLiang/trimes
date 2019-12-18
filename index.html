@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+    <div class="row">
+        <form class="col s12">
+            <div class="row">
+                <div id="btn_cookies_usage_notification" class="input-field col s12 ">
+                    <a class="waves-effect waves-light btn"><i class="material-icons right">cloud</i>Cookies Notification</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s8">
+                    <input placeholder="Trimes endpoint url" id="input_trimes_endpoint_url" type="text" class="validate">
+                    <label for="input_trimes_endpoint_url">Trimes Endpoint URL</label>
+                </div>
+                <div id="btn_trimes_endpoint_url" class="input-field col s4">
+                    <a class="waves-effect waves-light btn"><i class="material-icons right">cloud</i>connect</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div>
+        <!-- Modal Structure -->
+        <div id="modal_cookies_usage_consent" class="modal">
+            <div class="modal-content">
+                <h4>Cookies and Session storage notification</h4>
+                <p>This website uses, stores, and relies on Cookies and session on this browser. Only your non-sensitive input will be stored in Cookies. Your authentication data will only be temporarily stored in browser session. We do not collect nor transfer your account related data outside of this website.</p>
+            </div>
+            <div class="modal-footer">
+                <a id="link_cookies_usage_consent" class="modal-close waves-effect waves-green btn-flat">Agree & Close</a>
+            </div>
+        </div>
+    </div>
+    <!--JavaScript at end of body for optimized loading-->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs"></script>
+    <script type="module">
+        import Cookies from 'https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs'
+    $(document).ready(()=>{
+        $('#btn_trimes_endpoint_url').click((element) => {
+            console.log('is clicked');
+            if($('#input_trimes_endpoint_url').val() === ''){
+                alert('Trimes Endpoint URL must not be empty!');
+            }
+            else {
+                Cookies.set('cookies_trimes_endpoint_url', $('#input_trimes_endpoint_url').val());
+            }
+        });
+        $('#btn_cookies_usage_notification').click((element)=>{
+            resetCookiesConsent();
+        });
+        $('#input_trimes_endpoint_url').val(Cookies.get('cookies_trimes_endpoint_url') || '');
+
+        $('#link_cookies_usage_consent').click((element)=>{
+            consentToUseCookies();
+        });
+
+        let modal_elements = document.querySelectorAll('.modal');
+        let modal_instances = M.Modal.init(modal_elements);
+        let modal_cookies_usage_consent = M.Modal.getInstance($('#modal_cookies_usage_consent'));
+
+        const verifyCookiesConsent = () => {
+            console.info('called verifyCookiesConsent()');
+            if (!Cookies.get('cookies_usage_consent')) {
+                modal_cookies_usage_consent.open();
+            }
+        }
+
+        const consentToUseCookies = () => {
+            console.info('called consentToUseCookies()');
+            Cookies.set('cookies_usage_consent', true);
+        }
+        const resetCookiesConsent = () => {
+            console.info('called resetCookiesConsent()');
+            Cookies.remove('cookies_usage_consent');
+            verifyCookiesConsent();
+        }
+
+        const connectToTrimesEndpoint = () => {
+            Cookies.set('cookies_trimes_endpoint_url', $('#input_trimes_endpoint_url').val());
+        }
+
+        verifyCookiesConsent();
+
+        console.info('page loaded.');
+    });
+    </script>
+</body>
+
+</html>

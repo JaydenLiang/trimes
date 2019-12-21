@@ -29,13 +29,62 @@
                 </div>
             </div>
         </form>
+        <div class="row">
+            <div class="col s6 ">Main</div>
+            <div class="col s6 ">Link</div>
+        </div>
+        <div class="row">
+            <!-- main board -->
+            <div id="container_main_board" class="dropdown-field col s6 trello-board-container">
+                <a class='dropdown-trigger btn' href='#' data-target='dd_main_board' data-trello-type="board">Select Board</a>
+                    <!-- Dropdown Structure -->
+                    <ul id='dd_main_board' class='dropdown-content'></ul>
+            </div>
+            <!-- link board -->
+            <div id="container_link_board" class="dropdown-field col s6 trello-board-container">
+                <a class='dropdown-trigger btn' href='#' data-target='dd_link_board' data-trello-type="board">Select Board</a>
+                <!-- Dropdown Structure -->
+                <ul id='dd_link_board' class='dropdown-content'></ul>
+            </div>
+        </div>
+        <div class="row">
+            <!-- main list -->
+            <div id="container_main_list" class="dropdown-field col s6 trello-list-container">
+                <a class='dropdown-trigger btn' href='#' data-target='dd_main_list' data-associated-dropdown="dd_main_board" data-trello-type="list">Select List</a>
+                <!-- Dropdown Structure -->
+                <ul id='dd_main_list' class='dropdown-content'></ul>
+            </div>
+            <!-- link list -->
+            <div id="container_link_list" class="dropdown-field col s6 trello-list-container">
+                <a class='dropdown-trigger btn' href='#' data-target='dd_link_list' data-associated-dropdown="dd_link_board" data-trello-type="list">Select
+                    List</a>
+                <!-- Dropdown Structure -->
+                <ul id='dd_link_list' class='dropdown-content'></ul>
+            </div>
+        </div>
+        <div class="row">
+            <!-- main card -->
+            <div id="container_main_card" class="dropdown-field col s6 trello-card-container">
+                <a class='dropdown-trigger btn' href='#' data-target='dd_main_card' data-associated-dropdown="dd_main_list"
+                    data-trello-type="card">Select Card</a>
+                <!-- Dropdown Structure -->
+                <ul id='dd_main_card' class='dropdown-content'></ul>
+            </div>
+            <!-- link card -->
+            <div id="container_link_card" class="dropdown-field col s6 trello-card-container">
+                <a class='dropdown-trigger btn' href='#' data-target='dd_link_card' data-associated-dropdown="dd_link_list" data-trello-type="card">Select
+                    Card</a>
+                <!-- Dropdown Structure -->
+                <ul id='dd_link_card' class='dropdown-content'></ul>
+            </div>
+        </div>
     </div>
     <div>
         <!-- Modal Structure -->
         <div id="modal_cookies_usage_consent" class="modal">
             <div class="modal-content">
                 <h4>Cookies and Session storage notification</h4>
-                <p>This website uses, stores, and relies on Cookies and session on this browser. Only your non-sensitive input will be stored in Cookies. Your authentication data will only be temporarily stored in browser session. We do not collect nor transfer your account related data outside of this website.</p>
+                <p>This site uses cookies. They are used to auto-fill some inputs on each page. We do not collect nor transfer your data to use outside of this website. By continuing to use the site, you consent to the use of these cookies.</p>
             </div>
             <div class="modal-footer">
                 <a id="link_cookies_usage_consent" class="modal-close waves-effect waves-green btn-flat">Agree & Close</a>
@@ -43,20 +92,28 @@
         </div>
     </div>
     <!--JavaScript at end of body for optimized loading-->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs"></script>
+    <!-- <script src="https://trello.com/1/client.js?key=addb212bfd32e2275dd93426959e1f40"></script> -->
+    <!-- <script src="https://trello.com/1/client.js"></script> -->
     <script type="module">
-        import Cookies from 'https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs'
+    import Cookies from 'https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs'
+    let web_socket;
+    let trello_boards = {etag: "", data: []}, trello_lists = new Map(), trello_cards;
     $(document).ready(()=>{
-        $('#btn_trimes_endpoint_url').click((element) => {
+        $('#btn_trimes_endpoint_url').click(async (element) => {
             console.log('is clicked');
-            if($('#input_trimes_endpoint_url').val() === ''){
+            if (!validateTrimesEndpointUrl()) {
                 alert('Trimes Endpoint URL must not be empty!');
             }
             else {
-                Cookies.set('cookies_trimes_endpoint_url', $('#input_trimes_endpoint_url').val());
+                await connectToTrimesEndpoint();
             }
+        });
+        $('#input_trimes_endpoint_url').click((element) => {
+            console.log('is on focus');
+            validateTrimesEndpointUrl();
         });
         $('#btn_cookies_usage_notification').click((element)=>{
             resetCookiesConsent();
@@ -65,6 +122,14 @@
 
         $('#link_cookies_usage_consent').click((element)=>{
             consentToUseCookies();
+        });
+
+        // initialize dropdowns
+        $('.dropdown-trigger').dropdown({
+            hover: false,
+            constrainWidth: false,
+            coverTrigger: false,
+            onOpenStart: async (element) => { await onDropdownStart(element);}
         });
 
         let modal_elements = document.querySelectorAll('.modal');
@@ -88,9 +153,283 @@
             verifyCookiesConsent();
         }
 
-        const connectToTrimesEndpoint = () => {
-            Cookies.set('cookies_trimes_endpoint_url', $('#input_trimes_endpoint_url').val());
+        const connectToTrimesEndpoint = async () => {
+            if(!validateTrimesEndpointUrl()) {
+
+            }
+            saveInputs();
+            let trimesEndpointUrl = String($('#input_trimes_endpoint_url').val());
+            if(!trimesEndpointUrl.endsWith('/')){
+                trimesEndpointUrl += '/';
+            }
+            Cookies.set('trimesendpointurl', trimesEndpointUrl);
+            let wsTrimesEndpointUrl = await $.get(trimesEndpointUrl + 'wssep').done();
+            console.log(wsTrimesEndpointUrl)
+            if(wsTrimesEndpointUrl === 'undefined'){
+                throw new Error('failed to connect to the Trimes Endpoint.');
+            } else {
+            web_socket = new WebSocket(wsTrimesEndpointUrl);
+            web_socket.onopen = wsOnOpen;
+            web_socket.onclose = wsOnClose;
+            web_socket.onmessage = wsMessage;
+            web_socket.onerror = wsOnError;
+            }
         }
+
+        const wsOnOpen = async (event) => {
+            console.info('called wsOnOpen()');
+            console.info(event);
+            if(!sessionStorage.getItem('trimesapikey')) {
+                let trimesApiKey = await getTrimesApiKey();
+                if(trimesApiKey) {
+                    sessionStorage.setItem('trimesapikey', trimesApiKey);
+                }
+            }
+            // go through Trello Auth
+            await doTrelloAuth();
+            await fetchTrelloSourceBoards();
+        }
+        const wsOnClose = (event) => {
+            console.info('called wsOnClose()');
+        }
+        const wsMessage = (event) => {
+            console.info('called wsMessage()');
+        }
+        const wsOnError = (event) => {
+            console.info('called wsOnError()');
+        }
+
+        const getTrimesApiKey = async (event) => {
+            console.info('called getTrimesApiKey()');
+            try {
+                return await $.get(Cookies.get('trimesendpointurl') + 'apikey').done();
+            } catch (error) {
+                return null;
+            }
+        }
+
+        const doTrelloAuth = async (event) => {
+            console.info('called doTrelloAuth()');
+            const api_key = sessionStorage.getItem('trimesapikey');
+            if(!api_key) {
+                console.error('Trimes API key not found.');
+                return;
+            }
+            await $.getScript(`https://trello.com/1/client.js?key=${api_key}`).done();
+            // return JSON.parse(response);
+            const auth = async () => {
+                const expirations = new Map();
+                expirations.set('1hour', 3600);
+                expirations.set('1day', 86400);
+                expirations.set('30day', 2592000);
+                expirations.set('never', NaN);
+                const auth_expiration = '1day';
+                if(Trello.token() &&
+                    sessionStorage.getItem('trello_auth_expiration') < Date.now()){
+                        Trello.deauthorize();
+                }
+                return new Promise((resolve, reject) => {
+                    Trello.authorize({
+                        type: 'popup',
+                        name: 'Trimes!',
+                        persist: true,
+                        scope: {
+                            read: true,
+                            write: true,
+                            account: false
+                        },
+                        expiration: auth_expiration,
+                        success: (data) => {
+                            sessionStorage.setItem('trello_auth_expiration',
+                                Date.now() - expirations.get(auth_expiration));
+                            resolve(true);
+                        },
+                        error: (data) => {
+                            reject(data);
+                        }
+                    })
+                });
+            }
+            await auth();
+        }
+
+        const fetchTrelloSourceBoards = async () =>{
+            console.info('called fetchTrelloSourceBoards()');
+            if(!(Trello && Trello.token())){
+                console.error('Trello authorization incomplete.');
+                return;
+            }
+            const me = await Trello.members.get('me');
+            console.log(me);
+            let tasks = [];
+            me.idBoards.forEach((id)=>{
+                console.log(id);
+                tasks.push(Trello.boards.get(id));
+            });
+
+            const boards = await Promise.all(tasks);
+            trello_boards = {
+                etag: Date.now(),
+                data: boards
+            };
+            console.log(trello_boards);
+        }
+
+        const fetchTrelloSourceLists = async (board_id) => {
+            console.info('called fetchTrelloSourceLists()');
+            if (!(Trello && Trello.token())) {
+                console.error('Trello authorization incomplete.');
+                return;
+            }
+            const lists = await Trello.rest('get', `board/${board_id}/lists`);
+            const etag = Date.now();
+            lists.map(list=>{
+                trello_lists.set(list.id, {
+                    etag: etag,
+                    data: list
+                });
+            });
+        }
+
+        const onDropdownStart = async (element) => {
+            const instance = M.Dropdown.getInstance(element);
+            switch ($(instance.el).data('trello-type')) {
+                case 'board':
+                    onOpenDropdownBoard(instance);
+                    break;
+                case 'list':
+                    onOpenDropdownList(instance);
+                    break;
+                default:
+                    break;
+            }
+            console.log(instance);
+        }
+
+        const getTrelloBoard = (board_id) => {
+            return trello_boards.data.find(element=>element.id === board_id);
+        }
+
+        const getTrelloList = (list_id) => {
+            const list = trello_lists.get(list_id);
+            return list && list.data;
+        }
+
+        const onOpenDropdownBoard = (dd_instance) => {
+            console.log('called onOpenDropdownBoard()');
+            const dd_element = $(dd_instance.dropdownEl);
+            const source_etag = dd_element.data('source-etag');
+            if(trello_boards.etag === "" || source_etag !== trello_boards.etag){
+                dd_element.data('board-id', '');
+                dd_element.empty();
+                trello_boards.data.map((board) => {
+                    console.log(board);
+                    let li = document.createElement('li');
+                    $(li).data('board-id', board.id);
+                    $(li).click(()=>switchToBoard(li, dd_instance));
+                    let a = document.createElement('a');
+                    $(a).html(board.name);
+                    $(li).append(a).appendTo(dd_element);
+                });
+                dd_instance.recalculateDimensions();
+                dd_element.data('source-etag', trello_boards.etag);
+            }
+        }
+
+        const switchToBoard = (board_element, dd_instance) => {
+            console.log('called switchToBoard()');
+            const dd_element = $(dd_instance.dropdownEl);
+            const dd_button = $(dd_instance.el);
+            const assoc_list_dd_button = $('.trello-list-container').find(`a.dropdown-trigger[data-associated-dropdown="${dd_element.attr('id')}"]`);
+            const assoc_list_dd_instance = assoc_list_dd_button && M.Dropdown.getInstance(assoc_list_dd_button) || null;
+            const board_id = board_element && $(board_element).data('board-id') || null;
+            const board = board_id && getTrelloBoard(board_id) || null;
+            // no board selected
+            if(!board_element){
+                $(dd_button).html('select board');
+                dd_element.data('board-id', '');
+                dd_element.empty();
+                dd_instance.recalculateDimensions();
+                if(assoc_list_dd_instance){
+                    switchToList(null, assoc_list_dd_instance);
+                }
+                return;
+            }
+            dd_element.data('board-id', board_id);
+            $(dd_button).html(`board: ${board.name}`);
+            fetchTrelloSourceLists(board_id);
+            //board switched
+            if(assoc_list_dd_instance && $(assoc_list_dd_instance.el).data('board-id') !== board_id){
+                switchToList(null, assoc_list_dd_instance);
+                $(assoc_list_dd_instance.el).data('board-id', board_id);
+            }
+        }
+
+        const onOpenDropdownList = (dd_instance) => {
+            console.log('called onOpenDropdownList()');
+            const dd_element = $(dd_instance.dropdownEl);
+            const dd_button = $(dd_instance.el);
+            const board_id = dd_button.data('board-id');
+            let board_lists = [];
+            if(dd_element.find('li').length === 0) {
+                trello_lists.forEach((item) => {
+                    if (item.data.idBoard === board_id) {
+                        board_lists.push(item.data);
+                    }
+                });
+                board_lists.map((item) => {
+                    console.log(item);
+                });
+                board_lists.map((list) => {
+                    let li = document.createElement('li');
+                    $(li).data('list-id', list.id);
+                    $(li).data('board-id', list.idBoard);
+                    $(li).click(() => switchToList(li, dd_instance));
+                    let a = document.createElement('a');
+                    $(a).html(list.name);
+                    $(li).append(a).appendTo(dd_element);
+                });
+                dd_instance.recalculateDimensions();
+            }
+        }
+
+        const switchToList = (list_element, dd_instance) => {
+            console.log('called switchToList()');
+            const dd_element = $(dd_instance.dropdownEl);
+            const dd_button = $(dd_instance.el);
+            const assoc_card_dd_button = $('.trello-card-container').find(`a.dropdown-trigger[data-associated-dropdown="${dd_element.attr('id')}"]`);
+            const assoc_card_dd_instance = assoc_card_dd_button && M.Dropdown.getInstance(assoc_card_dd_button) || null;
+            const list_id = list_element && $(list_element).data('list-id') || null;
+            const list = list_id && getTrelloList(list_id) || null;
+            // no list selected
+            if (!list_element) {
+                $(dd_button).html('select list');
+                dd_element.data('list-id', '');
+                dd_element.empty();
+                dd_instance.recalculateDimensions();
+                if (assoc_card_dd_instance) {
+                    // switchToCard(null, assoc_card_dd_instance);
+                }
+                return;
+            }
+            dd_element.data('list-id', list_id);
+            $(dd_button).html(`list: ${list.name}`);
+        }
+
+
+        const validateTrimesEndpointUrl = ()=>{
+            if ($('#input_trimes_endpoint_url').val() === '') {
+                $('#input_trimes_endpoint_url').val('https://');
+            }
+            if ($('#input_trimes_endpoint_url').val() === 'https://') {
+                return false;
+            }
+            return true;
+        }
+
+        const saveInputs = () => {
+            Cookies.set('cookies_trimes_endpoint_url', $('#input_trimes_endpoint_url').val());
+        };
 
         verifyCookiesConsent();
 

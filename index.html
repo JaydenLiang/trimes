@@ -78,6 +78,67 @@
                 <ul id='dd_link_card' class='dropdown-content'></ul>
             </div>
         </div>
+        <div class="row">
+            <!-- label main checklist: parent task -->
+            <div id="label_main_checklist_parent_task" class="col s6">
+                Parent Task
+            </div>
+            <!-- label link checklist: parent task -->
+            <div id="label_link_checklist_parent_task" class="col s6">
+                Parent Task
+            </div>
+        </div>
+        <div class="row">
+            <!-- input main checklist: parent task -->
+            <div class="input-field col s5">
+                <input placeholder="parent task Trello short link" id="input_main_parent_url" type="text" class="validate">
+                <label for="input_main_parent_url">Trello short url</label>
+            </div>
+            <div class="input-field col s1">
+                <a class="waves-effect waves-light btn-small"><i class="tiny material-icons">launch</i></a>
+            </div>
+            <!-- input link checklist: parent task -->
+            <div id="container_link_checklist_parent_task" class="col s6">
+                Parent Task
+            </div>
+        </div>
+        <div class="row">
+            <!-- label main checklist: child task -->
+            <div id="label_main_checklist_parent_task" class="col s6">
+                Child Task(s)
+            </div>
+            <!-- label link checklist: child task -->
+            <div id="label_link_checklist_parent_task" class="col s6">
+                Child Task(s)
+            </div>
+        </div>
+        <div class="row">
+            <!-- input main checklist: child task -->
+            <div class="input-field col s6">
+                <div class="row">
+                    <div id="container_link_checklist_child_task" class="col s10">
+                        <input placeholder="child task Trello short link" type="text" class="validate">
+                    </div>
+                    <div id="container_link_checklist_child_task" class="col s2">
+                        <a class="waves-effect waves-light btn-small"><i class="tiny material-icons">remove</i></a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="container_link_checklist_child_task" class="col s10">
+                        <input placeholder="child task Trello short link" type="text" class="validate">
+                    </div>
+                    <div id="container_link_checklist_child_task" class="col s2">
+                        <a class="waves-effect waves-light btn-small"><i class="tiny material-icons">add</i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- input link checklist: child task -->
+            <div id="container_link_checklist_child_task" class="col s6">
+                <div class="row">
+                    <div id="container_link_checklist_child_task" class="col s6"></div>
+                </div>
+            </div>
+        </div>
     </div>
     <div>
         <!-- Modal Structure -->
@@ -95,12 +156,10 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs"></script>
-    <!-- <script src="https://trello.com/1/client.js?key=addb212bfd32e2275dd93426959e1f40"></script> -->
-    <!-- <script src="https://trello.com/1/client.js"></script> -->
     <script type="module">
     import Cookies from 'https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs'
     let web_socket;
-    let trello_boards = {etag: "", data: []}, trello_lists = new Map(), trello_cards;
+    let trello_boards = {etag: "", data: []}, trello_lists = new Map(), trello_cards = new Map();
     $(document).ready(()=>{
         $('#btn_trimes_endpoint_url').click(async (element) => {
             console.log('is clicked');
@@ -215,18 +274,26 @@
                 console.error('Trimes API key not found.');
                 return;
             }
-            await $.getScript(`https://trello.com/1/client.js?key=${api_key}`).done();
+            // Trello name space isn't available
+            try {
+                if(Trello) {
+                    console.info('Trello library is loaded.');
+                }
+            } catch (error) {
+                await $.getScript(`https://trello.com/1/client.js?key=${api_key}`).done();
+            }
+
             // return JSON.parse(response);
             const auth = async () => {
                 const expirations = new Map();
-                expirations.set('1hour', 3600);
-                expirations.set('1day', 86400);
-                expirations.set('30day', 2592000);
+                expirations.set('1hour', 3600000);
+                expirations.set('1day', 86400000);
+                expirations.set('30day', 2592000000);
                 expirations.set('never', NaN);
                 const auth_expiration = '1day';
-                if(Trello.token() &&
-                    sessionStorage.getItem('trello_auth_expiration') < Date.now()){
-                        Trello.deauthorize();
+                if(Number(sessionStorage.getItem('trello_auth_expiration')) < Date.now()){
+                    Trello.deauthorize();
+                    sessionStorage.removeItem('trello_auth_expiration');
                 }
                 return new Promise((resolve, reject) => {
                     Trello.authorize({
@@ -240,8 +307,10 @@
                         },
                         expiration: auth_expiration,
                         success: (data) => {
-                            sessionStorage.setItem('trello_auth_expiration',
-                                Date.now() - expirations.get(auth_expiration));
+                            if(!sessionStorage.getItem('trello_auth_expiration')) {
+                                sessionStorage.setItem('trello_auth_expiration',
+                                    Date.now() + expirations.get(auth_expiration));
+                            }
                             resolve(true);
                         },
                         error: (data) => {
@@ -291,6 +360,41 @@
             });
         }
 
+        const fetchTrelloSourceCards = async (list_id) => {
+            console.info('called fetchTrelloSourceCards()');
+            if (!(Trello && Trello.token())) {
+                console.error('Trello authorization incomplete.');
+                return;
+            }
+            const cards = await Trello.rest('get', `lists/${list_id}/cards`);
+            const etag = Date.now();
+            cards.map(card => {
+                trello_cards.set(card.id, {
+                    etag: etag,
+                    data: card
+                });
+            });
+        }
+
+        const fetchTrelloSourceChecklists = async (card_id) => {
+            console.info('called fetchTrelloSourceChecklists()');
+            if (!(Trello && Trello.token())) {
+                console.error('Trello authorization incomplete.');
+                return;
+            }
+            const card = trello_cards.get(card_id);
+            const checklists = await Trello.rest('get', `cards/${card_id}/checklists`);
+            const etag = Date.now();
+            card.data.checklists = {
+                etag: etag,
+                data: new Map()
+            };
+            checklists.map(checklist=>{
+                card.data.checklists.data.set(checklist.id, checklist);
+            });
+            trello_cards.set(card_id, card);
+        }
+
         const onDropdownStart = async (element) => {
             const instance = M.Dropdown.getInstance(element);
             switch ($(instance.el).data('trello-type')) {
@@ -299,6 +403,9 @@
                     break;
                 case 'list':
                     onOpenDropdownList(instance);
+                    break;
+                case 'card':
+                    onOpenDropdownCard(instance);
                     break;
                 default:
                     break;
@@ -315,12 +422,22 @@
             return list && list.data;
         }
 
+        const getTrelloCard = (card_id) => {
+            const card = trello_cards.get(card_id);
+            return card && card.data;
+        }
+
         const onOpenDropdownBoard = (dd_instance) => {
             console.log('called onOpenDropdownBoard()');
             const dd_element = $(dd_instance.dropdownEl);
             const source_etag = dd_element.data('source-etag');
             if(trello_boards.etag === "" || source_etag !== trello_boards.etag){
                 dd_element.data('board-id', '');
+                dd_element.children().each((element, value) => {
+                    if (value) {
+                        $(value).off('click');
+                    }
+                });
                 dd_element.empty();
                 trello_boards.data.map((board) => {
                     console.log(board);
@@ -348,6 +465,11 @@
             if(!board_element){
                 $(dd_button).html('select board');
                 dd_element.data('board-id', '');
+                dd_element.children().each((element, value) => {
+                    if (value) {
+                        $(value).off('click');
+                    }
+                });
                 dd_element.empty();
                 dd_instance.recalculateDimensions();
                 if(assoc_list_dd_instance){
@@ -405,17 +527,86 @@
             if (!list_element) {
                 $(dd_button).html('select list');
                 dd_element.data('list-id', '');
+                dd_element.children().each((element, value) => {
+                    if(value){
+                        $(value).off('click');
+                    }
+                });
                 dd_element.empty();
                 dd_instance.recalculateDimensions();
                 if (assoc_card_dd_instance) {
-                    // switchToCard(null, assoc_card_dd_instance);
+                    switchToCard(null, assoc_card_dd_instance);
                 }
                 return;
             }
             dd_element.data('list-id', list_id);
             $(dd_button).html(`list: ${list.name}`);
+            fetchTrelloSourceCards(list_id);
+            //list switched
+            if (assoc_card_dd_instance && $(assoc_card_dd_instance.el).data('list-id') !== list_id) {
+                switchToCard(null, assoc_card_dd_instance);
+                $(assoc_card_dd_instance.el).data('list-id', list_id);
+            }
         }
 
+        const onOpenDropdownCard = (dd_instance) => {
+            console.log('called onOpenDropdownCard()');
+            const dd_element = $(dd_instance.dropdownEl);
+            const dd_button = $(dd_instance.el);
+            const list_id = dd_button.data('list-id');
+            let list_cards = [];
+            if (dd_element.find('li').length === 0) {
+                trello_cards.forEach((item) => {
+                    if (item.data.idList === list_id) {
+                        list_cards.push(item.data);
+                    }
+                });
+                list_cards.map((item) => {
+                    console.log(item);
+                });
+                list_cards.map((card) => {
+                    let li = document.createElement('li');
+                    $(li).data('card-id', card.id);
+                    $(li).data('list-id', card.idList);
+                    $(li).click(() => switchToCard(li, dd_instance));
+                    let a = document.createElement('a');
+                    $(a).html(card.name);
+                    $(li).append(a).appendTo(dd_element);
+                });
+                dd_instance.recalculateDimensions();
+            }
+        }
+
+        const switchToCard = (card_element, dd_instance) => {
+            console.log('called switchToCard()');
+            const dd_element = $(dd_instance.dropdownEl);
+            const dd_button = $(dd_instance.el);
+            const card_id = card_element && $(card_element).data('card-id') || null;
+            const card = card_id && getTrelloCard(card_id) || null;
+            // no card selected
+            if (!card_element) {
+                $(dd_button).html('select card');
+                dd_element.data('card-id', '');
+                dd_element.children().each((element, value) => {
+                    if (value) {
+                        $(value).off('click');
+                    }
+                });
+                dd_element.empty();
+                dd_instance.recalculateDimensions();
+                return;
+            }
+            dd_element.data('card-id', card_id);
+            $(dd_button).html(`card: ${card.name}`);
+            fetchTrelloSourceChecklists(card_id);
+            // updateParentTaskList(card_id);
+            // updateChildTaskList(card_id);
+        }
+
+        const updateParentTaskList = (card_id) => {
+            const card = getTrelloCard(card_id);
+            const checklists = card.data.checklists;
+        }
 
         const validateTrimesEndpointUrl = ()=>{
             if ($('#input_trimes_endpoint_url').val() === '') {

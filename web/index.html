@@ -1529,11 +1529,20 @@
             if(!label_done){
                 label_done = await Trello.rest('post', 'labels', {
                     name: TRIMES_LABEL_NAME_DONE,
-                    color: 'null',
+                    color: 'black',
                     idBoard: card.idBoard
                 });
                 await fetchTrelloSourceLabels(card.idBoard);
                 label_done = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_DONE);
+            }
+            if (!label_reopen) {
+                label_reopen = await Trello.rest('post', 'labels', {
+                    name: TRIMES_LABEL_NAME_REOPEN,
+                    color: 'black',
+                    idBoard: card.idBoard
+                });
+                await fetchTrelloSourceLabels(card.idBoard);
+                label_reopen = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_REOPEN);
             }
             // if card has a reopen label, remove it.
             // and if card doesn't have a done label, add it.
@@ -1557,7 +1566,7 @@
             if(!label_reopen){
                 label_reopen = await Trello.rest('post', 'labels', {
                     name: TRIMES_LABEL_NAME_REOPEN,
-                    color: 'null',
+                    color: 'black',
                     idBoard: card.idBoard
                 });
                 await fetchTrelloSourceLabels(card.idBoard);

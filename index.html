@@ -1556,6 +1556,12 @@
                 !hasLabel(card, label_done.id) && attachLabel(card.id, label_done.id) || Promise.resolve(false)
             ]);
 
+            // mark it as complete on linked tasks
+            let check_items = await findCheckItemsInParentCard(card, 'incomplete');
+            await Promise.all(check_items.map(check_item=>{
+                return setCheckItemState(check_item.card.id, check_item.check_item.id, true);
+            }));
+
             // reload the card
             if(detached_done || attached_reopen){
                 await loadTrelloSourceCard(card_id, '0');

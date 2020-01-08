@@ -579,10 +579,11 @@
                 return;
             }
 
+            let card = trello_cards.get(card_id);
+
             //need reload against an etag?
-            if(etag !== null) {
-                let card = trello_cards.get(card_id);
-                if(card && card.etag && card.etag !== etag){
+            if(!card || etag !== null) {
+                if(!card || card && card.etag && card.etag !== etag){
                     card = {
                         etag: Date.now(),
                         data: await Trello.rest('get', `cards/${card_id}`)
@@ -626,6 +627,10 @@
             return card.labels.find(label=>{
                 return search_mode === 'name' && label.name === search_value || label.id === search_value;
             });
+        }
+
+        const isCompleteInTargetCard = (card, target_card) => {
+
         }
 
         const attachLabel = async (card_id, label_id) => {
@@ -1579,11 +1584,43 @@
                 !hasLabel(card, label_reopen.id) && attachLabel(card.id, label_reopen.id) || Promise.resolve(false)
             ]);
 
+            // mark it as complete on linked tasks
+            let check_items = await findCheckItemsInParentCard(card, 'complete');
+            await Promise.all(check_items.map(check_item=>{
+                return setCheckItemState(check_item.card.id, check_item.check_item.id, false);
+            }));
             // reload the card
             if(detached_done || attached_reopen){
                 await loadTrelloSourceCard(card_id, '0');
                 await refreshCard(card_id, 'main');
             }
+        }
+
+        const findCheckItemsInParentCard = async (card, state = null) => {
+            const parent_list = getParentList(card.id);
+            let check_items = [];
+            let promises = parent_list.checkItems.map(async item => {
+                //get the parent task
+                let parent_card = await loadCardByUrl(item.name);
+                await loadTrelloSourceCard(parent_card.id, '0');
+                let child_list = getChildList(parent_card.id);
+                let check_item = child_list.checkItems.find(child_item=>child_item.name===card.shortUrl);
+               if(!check_item) {
+                   return false;
+               }
+               // there's a check_item for this card
+                if(state === null || check_item.state === state) {
+                    check_items.push({
+                        card: parent_card,
+                        check_item: check_item
+                    });
+                    return true;
+                }
+            });
+
+            await Promise.all(promises);
+
+            return check_items;
         }
 
         const saveInputs = () => {

@@ -33,7 +33,7 @@
         .trello-color-red, .trello-color-red:hover {
             background-color: #eb5a46
         }
-        .trello-color-purple .trello-color-purple:hover {
+        .trello-color-purple, .trello-color-purple:hover {
             background-color: #c377e0
         }
         .trello-color-blue, .trello-color-blue:hover {
@@ -81,19 +81,43 @@
             </div>
         </form>
         <div class="row">
-            <div class="col s6 ">Main</div>
-            <div class="col s6 ">Link</div>
+            <div class="col s1">Main Task</div>
+            <div class="col s3">
+                <input placeholder="Url to load card" id="input_main_load_card_url" type="text" class="validate">
+            </div>
+            <div class="col s2">
+                <a id="btn_main_load_card"
+                    class="waves-effect waves-light btn trimes-action-load-card"
+                    data-trimes-side="main"
+                    data-source-input="input_main_load_card_url">Load Card</a>
+            </div>
+            <div class="col s1">Linked Task</div>
+            <div class="col s3">
+                <input placeholder="Url to load card" id="input_linked_load_card_url" type="text" class="validate">
+            </div>
+            <div class="col s2">
+                <a id="btn_linked_load_card"
+                    class="waves-effect waves-light btn trimes-action-load-card"
+                    data-trimes-side="linked"
+                    data-source-input="input_linked_load_card_url">Load Card</a>
+            </div>
         </div>
         <div class="row">
             <!-- main board -->
             <div id="container_main_board" class="dropdown-field col s6 trello-board-container">
-                <a class='dropdown-trigger btn' href='#' data-target='dd_main_board' data-trello-type="board">Select Board</a>
+                <a class='dropdown-trigger btn' href='#'
+                    data-target='dd_main_board'
+                    data-trello-type="board"
+                    data-trimes-side="main">Select Board</a>
                     <!-- Dropdown Structure -->
                     <ul id='dd_main_board' class='dropdown-content'></ul>
             </div>
-            <!-- link board -->
+            <!-- linked board -->
             <div id="container_linked_board" class="dropdown-field col s6 trello-board-container">
-                <a class='dropdown-trigger btn' href='#' data-target='dd_linked_board' data-trello-type="board">Select Board</a>
+                <a class='dropdown-trigger btn' href='#'
+                    data-target='dd_linked_board'
+                    data-trello-type="board"
+                    data-trimes-side="linked">Select Board</a>
                 <!-- Dropdown Structure -->
                 <ul id='dd_linked_board' class='dropdown-content'></ul>
             </div>
@@ -101,14 +125,21 @@
         <div class="row">
             <!-- main list -->
             <div id="container_main_list" class="dropdown-field col s6 trello-list-container">
-                <a class='dropdown-trigger btn' href='#' data-target='dd_main_list' data-associated-dropdown="dd_main_board" data-trello-type="list">Select List</a>
+                <a class='dropdown-trigger btn' href='#'
+                    data-target='dd_main_list'
+                    data-associated-dropdown="dd_main_board"
+                    data-trello-type="list"
+                    data-trimes-side="main">Select List</a>
                 <!-- Dropdown Structure -->
                 <ul id='dd_main_list' class='dropdown-content'></ul>
             </div>
-            <!-- link list -->
+            <!-- linked list -->
             <div id="container_linked_list" class="dropdown-field col s6 trello-list-container">
-                <a class='dropdown-trigger btn' href='#' data-target='dd_linked_list' data-associated-dropdown="dd_linked_board" data-trello-type="list">Select
-                    List</a>
+                <a class='dropdown-trigger btn' href='#'
+                    data-target='dd_linked_list'
+                    data-associated-dropdown="dd_linked_board"
+                    data-trello-type="list"
+                    data-trimes-side="linked">Select List</a>
                 <!-- Dropdown Structure -->
                 <ul id='dd_linked_list' class='dropdown-content'></ul>
             </div>
@@ -116,15 +147,19 @@
         <div class="row">
             <!-- main card -->
             <div id="container_main_card" class="dropdown-field col s6 trello-card-container">
-                <a class='dropdown-trigger btn' href='#' data-target='dd_main_card' data-associated-dropdown="dd_main_list"
-                    data-trello-type="card">Select Card</a>
+                <a class='dropdown-trigger btn' href='#' data-target='dd_main_card'
+                    data-associated-dropdown="dd_main_list"
+                    data-trello-type="card"
+                    data-trimes-side="main">Select Card</a>
                 <!-- Dropdown Structure -->
                 <ul id='dd_main_card' class='dropdown-content'></ul>
             </div>
-            <!-- link card -->
+            <!-- linked card -->
             <div id="container_linked_card" class="dropdown-field col s6 trello-card-container">
-                <a class='dropdown-trigger btn' href='#' data-target='dd_linked_card' data-associated-dropdown="dd_linked_list" data-trello-type="card">Select
-                    Card</a>
+                <a class='dropdown-trigger btn' href='#' data-target='dd_linked_card'
+                    data-associated-dropdown="dd_linked_list"
+                    data-trello-type="card"
+                    data-trimes-side="linked">Select Card</a>
                 <!-- Dropdown Structure -->
                 <ul id='dd_linked_card' class='dropdown-content'></ul>
             </div>
@@ -137,26 +172,44 @@
                     <div class="col s6">
                         Main Task Info
                     </div>
-                    <!-- linked task -->
+                    <!-- task status -->
                     <div class="col s2">
                         <span id="icon_main_task_new" class="hide valign-wrapper"><i class="small material-icons">center_focus_strong</i>NEW</span>
                         <span id="icon_main_task_complete" class="hide valign-wrapper"><i class="small material-icons">check_box</i>COMPLETE</span>
                         <span id="icon_main_task_reopen" class="hide valign-wrapper"><i class="small material-icons">error_outline</i>REOPEN</span>
                     </div>
+                    <!-- action buttons -->
                     <div class="col s3">
-                        <a id="btn_main_task_complete" class="hide btn-small valign-wrapper"><i class="small material-icons left">check_box</i>COMPLETE</a>
-                        <a id="btn_main_task_reopen" class="hide btn-small valign-wrapper"><i class="small material-icons left">error_outline</i>REOPEN</a>
+                        <a id="btn_main_task_complete" class="hide btn-small valign-wrapper trimes-action-complete-task" data-trimes-side="main"><i class="small material-icons left">check_box</i>COMPLETE</a>
+                        <a id="btn_main_task_reopen" class="hide btn-small valign-wrapper trimes-action-reopen-task" data-trimes-side="main"><i class="small material-icons left">error_outline</i>REOPEN</a>
                     </div>
                     <div class="col s1"></div>
                 </div>
             </div>
             <!-- linked task -->
             <div id="caption_linked_checklist_parent_task" class="col s6">
-                Linked Task Info
+                <div class="row">
+                    <!-- linked task -->
+                    <div class="col s6">
+                        Linked Task Info
+                    </div>
+                    <!-- task status -->
+                    <div class="col s2">
+                        <span id="icon_linked_task_new" class="hide valign-wrapper"><i class="small material-icons">center_focus_strong</i>NEW</span>
+                        <span id="icon_linked_task_complete" class="hide valign-wrapper"><i class="small material-icons">check_box</i>COMPLETE</span>
+                        <span id="icon_linked_task_reopen" class="hide valign-wrapper"><i class="small material-icons">error_outline</i>REOPEN</span>
+                    </div>
+                    <!-- action buttons -->
+                    <div class="col s3">
+                        <a id="btn_linked_task_complete" class="hide btn-small valign-wrapper trimes-action-complete-task" data-trimes-side="linked"><i class="small material-icons left">check_box</i>COMPLETE</a>
+                        <a id="btn_linked_task_reopen" class="hide btn-small valign-wrapper trimes-action-reopen-task" data-trimes-side="linked"><i class="small material-icons left">error_outline</i>REOPEN</a>
+                    </div>
+                    <div class="col s1"></div>
+                </div>
             </div>
         </div>
         <div class="row">
-            <!-- info task -->
+            <!-- info main task -->
             <div id="main_task_info" class="col s6"></div>
             <!-- info linked task -->
             <div id="linked_task_info" class="col s6"></div>
@@ -183,21 +236,33 @@
         </div>
         <div class="row">
             <div class="col s6">Add a child task:</div>
-            <div class="col s6">reserved blank</div>
+            <div class="col s6">Add a child task:</div>
         </div>
         <div class="row">
             <div class="col s6">
+                <!-- label: main child task -->
                 <div id="container_main_actions_child_task" class="row">
                     <div class="col s10">
                         <label for="template_input_main_child_task_url">Trello short url</label>
                         <input id="template_input_main_child_task_url" placeholder="child task Trello short link" type="text" class="validate">
                     </div>
                     <div class="col s2">
-                        <i id="action_main_add_child_task" class="small material-icons clickable">add_box</i>
+                        <i id="action_main_add_child_task" class="small material-icons clickable trimes-action-add-child-task" data-trimes-side="main">add_box</i>
                     </div>
                 </div>
             </div>
-            <div class="col s6">reserved blank</div>
+            <div class="col s6">
+                <!-- label: linked child task -->
+                <div id="container_linked_actions_child_task" class="row">
+                    <div class="col s10">
+                        <label for="template_input_linked_child_task_url">Trello short url</label>
+                        <input id="template_input_linked_child_task_url" placeholder="child task Trello short link" type="text" class="validate">
+                    </div>
+                    <div class="col s2">
+                        <i id="action_linked_add_child_task" class="small material-icons clickable trimes-action-add-child-task" data-trimes-side="main">add_box</i>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="hide row">
             <!-- actions for main checklist: child task -->
@@ -262,10 +327,66 @@
                     </div>
                 </div>
             </div>
-            <!-- input link checklist: child task -->
-            <div class="col s6">
-                <div class="row">
-                    <div id="container_linked_checklist_child_task" class="col s6">aa</div>
+            <!-- actions for linked checklist: child task -->
+            <div class="input-field col s6">
+                <div id="container_linked_actions_child_task_template" class="row hide" data-type="sub-task">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s12">
+                                <label>Child task</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s9">
+                                <div class="row card-name">
+                                    <div class="col s11">
+                                        <span data-type="card-name"></span>
+                                        <input placeholder="Trello short link" type="hidden" class="validate" data-type="url" readonly="true">
+                                    </div>
+                                    <div class="col s1">
+                                        <i class="small material-icons clickable hide trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_linked_child_task">open_in_new</i>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 task-label-container">No Labels</div>
+                                </div>
+                            </div>
+                            <div class="col s3">
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        <i class="small material-icons clickable" data-type="delete-task">delete_forever</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="container_linked_actions_linked_task_template" class="row" data-type="sub-task">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s12">
+                                <label>Child task</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s9">
+                                <div class="row card-name">
+                                    <div class="col s11">
+                                        <span data-type="card-name"></span>
+                                        <input placeholder="Trello short link" type="hidden" class="validate" data-type="url" readonly="true">
+                                    </div>
+                                    <div class="col s1">
+                                        <i class="small material-icons clickable hide trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_linked_child_task">open_in_new</i>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 task-label-container">No Labels</div>
+                                </div>
+                            </div>
+                            <div class="col s3">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -281,6 +402,19 @@
                     </div>
                     <div id="container_main_checklist_child_task" class="col s12"></div>
                     <div id="container_main_checklist_linked_task" class="col s12"></div>
+                </div>
+            </div>
+            <!-- linked checklist: child task -->
+            <div class="col s6">
+                <div class="row">
+                    <div class="col s12">
+                        <ul class="tabs">
+                            <li class="tab col s6"><a href="#container_linked_checklist_child_task">Child Tasks (<span id="linked_child_task_count">0</span>)</a></li>
+                            <li class="tab col s6"><a href="#container_linked_checklist_linked_task">Linked Tasks (<span id="linked_linked_task_count">0</span>)</a></li>
+                        </ul>
+                    </div>
+                    <div id="container_linked_checklist_child_task" class="col s12"></div>
+                    <div id="container_linked_checklist_linked_task" class="col s12"></div>
                 </div>
             </div>
         </div>
@@ -303,54 +437,12 @@
     <script type="module" src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs"></script>
     <script type="module">
     import Cookies from 'https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs'
+    const EVENT_TRIMES_CONNECTED = 'TrimesConnected';
     const PARENT_LIST_NAME = 'parent-task', CHILD_LIST_NAME = 'child-tasks';
     const TRIMES_LABEL_NAME_DONE = 'TR:DONE', TRIMES_LABEL_NAME_REOPEN = 'TR:RE-OPEN';
     let web_socket;
     let trello_boards = {etag: "", data: []}, trello_lists = new Map(), trello_cards = new Map();
     $(document).ready(async ()=>{
-        $('#btn_trimes_endpoint_url').click(async (event) => {
-            if (!validateTrimesEndpointUrl()) {
-                alert('Trimes Endpoint URL must not be empty!');
-            }
-            else {
-                await connectToTrimesEndpoint();
-            }
-        });
-
-        $('#cb_auto_connect').click(async (event) => {
-            if($('#cb_auto_connect').prop('checked')){
-                Cookies.set('trimesautoconnect', 'true');
-                M.toast( {html: 'Auto connect enabled.' });
-            } else {
-                Cookies.set('trimesautoconnect', 'false');
-                M.toast({ html: 'Auto connect disabled.' });
-            }
-        });
-
-        $('#input_trimes_endpoint_url').click((event) => {
-            validateTrimesEndpointUrl();
-        });
-        $('#btn_cookies_usage_notification').click((event)=>{
-            resetCookiesConsent();
-        });
-        $('#input_trimes_endpoint_url').val(Cookies.get('cookies_trimes_endpoint_url') || '');
-
-        $('#link_cookies_usage_consent').click((event)=>{
-            consentToUseCookies();
-        });
-
-        $('#action_main_add_child_task').click(async (event)=>{
-            await addChildTask();
-        });
-
-        // initialize dropdowns
-        $('.dropdown-trigger').dropdown({
-            hover: false,
-            constrainWidth: false,
-            coverTrigger: false,
-            onOpenStart: async (element) => { await onDropdownStart(element);}
-        });
-
         let modal_elements = document.querySelectorAll('.modal');
         let modal_instances = M.Modal.init(modal_elements);
         let modal_cookies_usage_consent = M.Modal.getInstance($('#modal_cookies_usage_consent'));
@@ -419,7 +511,7 @@
             if(!trimesEndpointUrl.endsWith('/')){
                 trimesEndpointUrl += '/';
             }
-            Cookies.set('trimesendpointurl', trimesEndpointUrl);
+            Cookies.set('trimes_end_point_url', trimesEndpointUrl);
             let wsTrimesEndpointUrl = await $.get(trimesEndpointUrl + 'wssep').done();
             console.log(wsTrimesEndpointUrl)
             if(wsTrimesEndpointUrl === 'undefined'){
@@ -445,6 +537,7 @@
             // go through Trello Auth
             await doTrelloAuth();
             await fetchTrelloSourceBoards();
+            window.dispatchEvent(new Event(EVENT_TRIMES_CONNECTED));
         }
         const wsOnClose = (event) => {
             console.info('called wsOnClose()');
@@ -459,7 +552,7 @@
         const getTrimesApiKey = async (event) => {
             console.info('called getTrimesApiKey()');
             try {
-                return await $.get(Cookies.get('trimesendpointurl') + 'apikey').done();
+                return await $.get(Cookies.get('trimes_end_point_url') + 'apikey').done();
             } catch (error) {
                 return null;
             }
@@ -734,7 +827,6 @@
                 });
                 dd_element.empty();
                 trello_boards.data.map((board) => {
-                    console.log(board);
                     let li = document.createElement('li');
                     $(li).data('board-id', board.id);
                     $(li).click(()=>switchToBoard(li, dd_instance));
@@ -747,46 +839,57 @@
             }
         }
 
-        const switchToBoard = (board_element, dd_instance) => {
+        const switchToBoard = async (board_element, dd_instance, selected_board_id = null) => {
             console.log('called switchToBoard()');
             const dd_element = $(dd_instance.dropdownEl);
             const dd_button = $(dd_instance.el);
+            const side = dd_button.data('trimes-side');
             const assoc_list_dd_button = $('.trello-list-container').find(`a.dropdown-trigger[data-associated-dropdown="${dd_element.attr('id')}"]`);
             const assoc_list_dd_instance = assoc_list_dd_button && M.Dropdown.getInstance(assoc_list_dd_button) || null;
-            const board_id = board_element && $(board_element).data('board-id') || null;
+            const board_id = board_element && $(board_element).data('board-id') || selected_board_id || null;
             const board = board_id && getTrelloBoard(board_id) || null;
+
             // no board selected
-            if(!board_element){
+            if(!board){
                 $(dd_button).html('select board');
                 dd_element.data('board-id', '');
                 dd_element.children().each((index, dom) => {
-                    if (dome) {
-                        $(dome).off('click');
+                    if (dom) {
+                        $(dom).off('click');
                     }
                 });
                 dd_element.empty();
                 dd_instance.recalculateDimensions();
                 if(assoc_list_dd_instance){
-                    switchToList(null, assoc_list_dd_instance);
+                    await switchToList(null, assoc_list_dd_instance);
                 }
-                return;
+                return board_id; // return board_id
             }
+
+            Cookies.set(`trimes_${side}_board_id`, board_id);
+
             dd_element.data('board-id', board_id);
             if(board.labels === null) {
-                fetchTrelloSourceLabels(board_id);
+                await fetchTrelloSourceLabels(board_id);
             }
             $(dd_button).html(`board: ${board.name}`);
 
             // async fetch board labels
-            fetchTrelloSourceLabels(board_id).then(labels=>{
-                console.log(labels);
-            });
-            fetchTrelloSourceLists(board_id);
+            await fetchTrelloSourceLabels(board_id);
+            await fetchTrelloSourceLists(board_id);
             //board switched
             if(assoc_list_dd_instance && $(assoc_list_dd_instance.el).data('board-id') !== board_id){
-                switchToList(null, assoc_list_dd_instance);
+                await switchToList(null, assoc_list_dd_instance); // clear the list
                 $(assoc_list_dd_instance.el).data('board-id', board_id);
             }
+            return board_id;
+        }
+
+        const switchToBoardById = async (board_id, side = 'main') => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const dd_trigger = $(`#container_${side_name}_board .dropdown-trigger`).get(0);
+            const dd_instance = M.Dropdown.getInstance(dd_trigger);
+            return await switchToBoard(null, dd_instance, board_id);
         }
 
         const onOpenDropdownList = (dd_instance) => {
@@ -817,16 +920,18 @@
             }
         }
 
-        const switchToList = (list_element, dd_instance) => {
+        const switchToList = async (list_element, dd_instance, selected_list_id = null) => {
             console.log('called switchToList()');
             const dd_element = $(dd_instance.dropdownEl);
             const dd_button = $(dd_instance.el);
+            const side = dd_button.data('trimes-side');
             const assoc_card_dd_button = $('.trello-card-container').find(`a.dropdown-trigger[data-associated-dropdown="${dd_element.attr('id')}"]`);
             const assoc_card_dd_instance = assoc_card_dd_button && M.Dropdown.getInstance(assoc_card_dd_button) || null;
-            const list_id = list_element && $(list_element).data('list-id') || null;
+            const list_id = list_element && $(list_element).data('list-id') || selected_list_id || null;
             const list = list_id && getTrelloList(list_id) || null;
+
             // no list selected
-            if (!list_element) {
+            if (!list) {
                 $(dd_button).html('select list');
                 dd_element.data('list-id', '');
                 dd_element.children().each((index, dom) => {
@@ -837,24 +942,36 @@
                 dd_element.empty();
                 dd_instance.recalculateDimensions();
                 if (assoc_card_dd_instance) {
-                    switchToCard(null, assoc_card_dd_instance);
+                    await switchToCard(null, assoc_card_dd_instance);
                 }
-                return;
+                return list_id;
             }
+
+            Cookies.set(`trimes_${side}_list_id`, list_id);
+
             dd_element.data('list-id', list_id);
             $(dd_button).html(`list: ${list.name}`);
-            fetchTrelloSourceCards(list_id);
+            await fetchTrelloSourceCards(list_id);
             //list switched
             if (assoc_card_dd_instance && $(assoc_card_dd_instance.el).data('list-id') !== list_id) {
-                switchToCard(null, assoc_card_dd_instance);
+                await switchToCard(null, assoc_card_dd_instance);
                 $(assoc_card_dd_instance.el).data('list-id', list_id);
             }
+            return list_id;
+        }
+
+        const switchToListById = async (list_id, side = 'main') => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const dd_trigger = $(`#container_${side_name}_list .dropdown-trigger`).get(0);
+            const dd_instance = M.Dropdown.getInstance(dd_trigger);
+            await switchToList(null, dd_instance, list_id);
         }
 
         const onOpenDropdownCard = (dd_instance) => {
             console.log('called onOpenDropdownCard()');
             const dd_element = $(dd_instance.dropdownEl);
             const dd_button = $(dd_instance.el);
+            const side = dd_button.data('trimes-side');
             const list_id = dd_button.data('list-id');
             let list_cards = [];
             if (dd_element.find('li').length === 0) {
@@ -870,7 +987,9 @@
                     let li = document.createElement('li');
                     $(li).data('card-id', card.id);
                     $(li).data('list-id', card.idList);
-                    $(li).click(() => switchToCard(li, dd_instance));
+                    $(li).click(async () => {
+                        switchToCard(li, dd_instance).then(card_id=>refreshCard(card_id, side));
+                    });
                     let a = document.createElement('a');
                     $(a).html(card.name);
                     $(li).append(a).appendTo(dd_element);
@@ -879,14 +998,16 @@
             }
         }
 
-        const switchToCard = async (card_element, dd_instance) => {
+        const switchToCard = async (card_element, dd_instance, slected_card_id = null) => {
             console.log('called switchToCard()');
             const dd_element = $(dd_instance.dropdownEl);
             const dd_button = $(dd_instance.el);
-            const card_id = card_element && $(card_element).data('card-id') || null;
+            const side = dd_button.data('trimes-side');
+            const card_id = card_element && $(card_element).data('card-id') || slected_card_id || null;
             const card = card_id && getTrelloCard(card_id) || null;
+
             // no card selected
-            if (!card_element) {
+            if (!card) {
                 $(dd_button).html('select card');
                 dd_element.data('card-id', '');
                 dd_element.children().each((index, dom) => {
@@ -896,12 +1017,23 @@
                 });
                 dd_element.empty();
                 dd_instance.recalculateDimensions();
-                return;
+                return card_id;
             }
+
+            Cookies.set(`trimes_${side}_card_id`, card_id);
+
             dd_element.data('card-id', card_id);
             $(dd_button).html(`card: ${card.name}`);
 
-            await refreshCard(card_id, 'main');
+            return card_id;
+        }
+
+        const switchToCardById = async (card_id, side = 'main') => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const dd_trigger = $(`#container_${side_name}_card .dropdown-trigger`).get(0);
+            const dd_instance = M.Dropdown.getInstance(dd_trigger);
+            await switchToCard(null, dd_instance, card_id);
+            await refreshCard(card_id, side_name);
         }
 
         const refreshCard = async (card_id, side = 'main', clear = false) => {
@@ -966,8 +1098,8 @@
             //set action buttons
 
             await fetchTrelloSourceChecklists(card_id);
-            updateParentTaskList(card_id);
-            updateChildTaskList(card_id);
+            updateParentTaskList(card_id, side_name);
+            updateChildTaskList(card_id, side_name);
         }
 
         const updateParentTaskList = async (card_id, side = 'main') => {
@@ -1296,9 +1428,10 @@
             return getTrelloCard(card_id);
         }
 
-        const addChildTask = async ()=>{
+        const addChildTask = async (side = 'main')=>{
             console.log('called addChildTask()');
-            const input_url = $('#template_input_main_child_task_url');
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const input_url = $(`#template_input_${side_name}_child_task_url`);
             let child_task_url = String(input_url.val()).trim();
             if(child_task_url ===''){
                 M.toast({ html: 'Child Task url is required!' });
@@ -1314,7 +1447,7 @@
             input_url.val(child_task_url);
 
             // cannot add self as child task
-            let parent_card = getSelectedCard('main');
+            let parent_card = getSelectedCard(side_name);
             if(String(parent_card.shortUrl).trim() === child_task_url) {
                 M.toast({ html: 'Cannot add itself as a child task!' });
                 return;
@@ -1325,7 +1458,7 @@
 
             const parent_card_id = parent_card && parent_card.id;
             if (!parent_card_id) {
-                M.toast({ html: 'Select a main card first!' });
+                M.toast({ html: `Select a ${side_name} card first!` });
                 return;
             }
             // check wether the parent task already contain this child
@@ -1357,7 +1490,7 @@
                     `created on card (id: ${parent_card_id})`);
                 await loadTrelloSourceCard(parent_card_id, '0');
                 //refresh parent card and child list
-                parent_card = getSelectedCard('main');
+                parent_card = getSelectedCard(side_name);
                 child_list = getChildList(parent_card_id);
                 child_list_id = child_list && child_list.id;
             }
@@ -1373,7 +1506,7 @@
             // reload checklists
             await fetchTrelloSourceChecklists(parent_card_id);
             child_list = getChildList(parent_card_id);
-            updateChildTaskList(parent_card_id);
+            updateChildTaskList(parent_card_id, side_name);
         }
 
         const updateOpenUrlButton = (dom, url) => {
@@ -1569,7 +1702,9 @@
             }
         }
 
-        const reopenTask = async (card_id) => {
+        const reopenTask = async (card_id, side = 'main') => {
+            console.log('callded reopenTask()');
+            const side_name = side === 'linked' && 'linked' || 'main';
             const card = getTrelloCard(card_id);
             let label_reopen = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_REOPEN);
             let label_done = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_DONE);
@@ -1598,7 +1733,7 @@
             // reload the card
             if(detached_done || attached_reopen){
                 await loadTrelloSourceCard(card_id, '0');
-                await refreshCard(card_id, 'main');
+                await refreshCard(card_id, side_name);
             }
         }
 
@@ -1634,36 +1769,136 @@
         };
 
         const autoConnect = async () => {
-            if (verifyCookiesConsent() && Cookies.get('trimesautoconnect') === 'true') {
+            if (verifyCookiesConsent() && Cookies.get('trimes_auto_connect') === 'true') {
                 await connectToTrimesEndpoint();
+                return new Promise(resolve=>{
+                    window.addEventListener(EVENT_TRIMES_CONNECTED, ()=>{
+                        resolve(true);
+                    })
+                });
+            } else {
+                return false;
             }
         }
 
+        $('#btn_cookies_usage_notification').click((event)=>{
+            resetCookiesConsent();
+        });
+
+        $('#link_cookies_usage_consent').click((event)=>{
+            consentToUseCookies();
+        });
+
         $('.tabs').tabs();
 
-        $('#cb_auto_connect').prop('checked', Cookies.get('trimesautoconnect') === 'true');
+        $('#input_trimes_endpoint_url').val(Cookies.get('cookies_trimes_endpoint_url') || '');
+
+        $('#btn_trimes_endpoint_url').click(async (event) => {
+            if (!validateTrimesEndpointUrl()) {
+                alert('Trimes Endpoint URL must not be empty!');
+            }
+            else {
+                await connectToTrimesEndpoint();
+            }
+        });
+
+        $('#input_trimes_endpoint_url').click((event) => {
+            validateTrimesEndpointUrl();
+        });
+
+        $('#cb_auto_connect').prop('checked', Cookies.get('trimes_auto_connect') === 'true');
+
+        $('#cb_auto_connect').click(async (event) => {
+            if($('#cb_auto_connect').prop('checked')){
+                Cookies.set('trimes_auto_connect', 'true');
+                M.toast( {html: 'Auto connect enabled.' });
+            } else {
+                Cookies.set('trimes_auto_connect', 'false');
+                M.toast({ html: 'Auto connect disabled.' });
+            }
+        });
+
+        $('.trimes-action-add-child-task').click(async (event)=>{
+            event.stopPropagation();
+            await addChildTask($(event.target).data('trimes-side'));
+        });
+
+        // initialize dropdowns
+        $('.dropdown-trigger').dropdown({
+            hover: false,
+            constrainWidth: false,
+            coverTrigger: false,
+            onOpenStart: async (element) => { await onDropdownStart(element);}
+        });
 
         $('.monitor-typing').each((index, dom) =>{
             monitorTyping(dom);
         });
 
-        $('#btn_main_task_reopen').click(event=>{
+        $('.trimes-action-reopen-task').click(async event=>{
             event.stopPropagation();
-            const dom = $(event.target);
-            const card_id = dom.data('card-id');
+            const element = $(event.target);
+            const card_id = element.data('card-id');
             const card = getTrelloCard(card_id);
-            reopenTask(card.id);
+            await reopenTask(card.id, element.data('trimes-side'));
         });
 
-        $('#btn_main_task_complete').click(async event=>{
+        $('.trimes-action-complete-task').click(async event=>{
             event.stopPropagation();
-            const dom = $(event.target);
-            const card_id = dom.data('card-id');
+            const element = $(event.target);
+            const card_id = element.data('card-id');
             const card = getTrelloCard(card_id);
-            await completeTask(card.id);
+            await completeTask(card.id, element.data('trimes-side'));
         });
 
-        await autoConnect();
+        $('.trimes-action-load-card').click(async event=>{
+            event.stopPropagation();
+            const element = $(event.target);
+            const side = element.data('trimes-side');
+            const source_element_id = element.data('source-input');
+
+            const card_url = getTrelloShortLink($(`#${source_element_id}`).val());
+
+            if(!card_url) {
+                M.toast({ html: 'The input isn\'t a valid Trello url!' });
+                return;
+            }
+
+            const card = await loadCardByUrl(card_url);
+
+            if(card && card.id) {
+                $(`#${source_element_id}`).val(card_url);
+                Cookies.set(`trimes_${side}_load_card_url`, card_url);
+                await switchToBoardById(card.idBoard, side);
+                await switchToListById(card.idList, side);
+                await switchToCardById(card.id, side);
+            }
+        });
+
+        await autoConnect().then(async connected=>{
+            if(connected){
+                $('#input_main_load_card_url').val(Cookies.get('trimes_main_load_card_url') || '');
+                $('#input_linked_load_card_url').val(Cookies.get('trimes_linked_load_card_url') || '');
+                if (Cookies.get('trimes_main_board_id') !== 'null') {
+                    await switchToBoardById(Cookies.get('trimes_main_board_id'), 'main');
+                }
+                if (Cookies.get('trimes_main_list_id') !== 'null') {
+                    await switchToListById(Cookies.get('trimes_main_list_id'), 'main');
+                }
+                if (Cookies.get('trimes_main_card_id') !== 'null') {
+                    await switchToCardById(Cookies.get('trimes_main_card_id'), 'main');
+                }
+                if (Cookies.get('trimes_linked_board_id') !== 'null') {
+                    await switchToBoardById(Cookies.get('trimes_linked_board_id'), 'linked');
+                }
+                if (Cookies.get('trimes_linked_list_id') !== 'null') {
+                    await switchToListById(Cookies.get('trimes_linked_list_id'), 'linked');
+                }
+                if (Cookies.get('trimes_linked_card_id') !== 'null') {
+                    await switchToCardById(Cookies.get('trimes_linked_card_id'), 'linked');
+                }
+            }
+        });
 
         console.info('page loaded.');
     });

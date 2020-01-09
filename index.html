@@ -1228,7 +1228,7 @@
                 $(row).append(container);
                 main_node_root.append(row);
             });
-            $(`#main_${type_name}_task_count`).html(task_count);
+            $(`#${side_name}_${type_name}_task_count`).html(task_count);
             main_node_root.data('card-id', card_id);
         }
 

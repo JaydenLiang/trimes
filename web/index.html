@@ -10,6 +10,10 @@
         .clickable {
             cursor: pointer;
         }
+        .pixel-sized {
+            width: 1px !important;
+            height: 1px !important;
+        }
         .trimes-label {
             margin-left: 3px;
             margin-bottom: 3px;
@@ -81,23 +85,29 @@
             </div>
         </form>
         <div class="row">
-            <div class="col s1">Main Task</div>
-            <div class="col s3">
-                <input placeholder="Url to load card" id="input_main_load_card_url" type="text" class="validate">
+            <div class="col s6">
+                <h4>Main Task <i class="material-icons clickable trimes-action-swap-tasks">repeat</i></h4>
+            </div>
+            <div class="col s6">
+                <h4>Linked Task <i class="material-icons clickable trimes-action-swap-tasks">repeat</i></h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s4">
+                <input placeholder="Url to load card" id="input_main_load_card_url" type="text" class="validate" style="margin-bottom: 0px; height: 30px;">
             </div>
             <div class="col s2">
                 <a id="btn_main_load_card"
-                    class="waves-effect waves-light btn trimes-action-load-card"
+                    class="waves-effect waves-light btn-small trimes-action-load-card"
                     data-trimes-side="main"
                     data-source-input="input_main_load_card_url">Load Card</a>
             </div>
-            <div class="col s1">Linked Task</div>
-            <div class="col s3">
-                <input placeholder="Url to load card" id="input_linked_load_card_url" type="text" class="validate">
+            <div class="col s4">
+                <input placeholder="Url to load card" id="input_linked_load_card_url" type="text" class="validate" style="margin-bottom: 0px; height: 30px;">
             </div>
             <div class="col s2">
                 <a id="btn_linked_load_card"
-                    class="waves-effect waves-light btn trimes-action-load-card"
+                    class="waves-effect waves-light btn-small trimes-action-load-card"
                     data-trimes-side="linked"
                     data-source-input="input_linked_load_card_url">Load Card</a>
             </div>
@@ -162,6 +172,10 @@
                     data-trimes-side="linked">Select Card</a>
                 <!-- Dropdown Structure -->
                 <ul id='dd_linked_card' class='dropdown-content'></ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 center">
             </div>
         </div>
         <div class="row">
@@ -270,30 +284,32 @@
                 <div id="container_main_actions_child_task_template" class="row hide" data-type="sub-task">
                     <div class="col s12">
                         <div class="row">
-                            <div class="col s12">
-                                <label>Child task</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s9">
-                                <div class="row card-name">
-                                    <div class="col s11">
-                                        <span data-type="card-name"></span>
-                                        <input placeholder="Trello short link" type="hidden" class="validate" data-type="url" readonly="true">
+                            <div class="col s1">
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        <i class="small material-icons task-state-incomplete">query_builder</i>
+                                        <i class="small material-icons task-state-complete">check_box</i>
                                     </div>
-                                    <div class="col s1">
-                                        <i class="small material-icons clickable hide trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_child_task" >open_in_new</i>
+                                </div>
+                            </div>
+                            <div class="col s11">
+                                <div class="row card-name">
+                                    <div class="col s12">
+                                        <span data-type="card-name"></span>
+                                        <input placeholder="Trello short link" class="pixel-sized validate" data-type="url" readonly="true">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        SHOW:<i class="small material-icons clickable trimes-action-show-task" data-trimes-side="main">vertical_align_top</i>
+                                        <i class="small material-icons clickable trimes-action-show-task" data-trimes-side="linked">arrow_forward</i>
+                                        <i class="small material-icons clickable hide trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_child_task">open_in_new</i>
+                                        , COPY URL:<i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url">content_copy</i>
+                                        , DELETE:<i class="small material-icons clickable" data-type="delete-task">delete_forever</i>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col s12 task-label-container">No Labels</div>
-                                </div>
-                            </div>
-                            <div class="col s3">
-                                <div class="row">
-                                    <div class="col s12 valign-wrapper">
-                                        <i class="small material-icons clickable" data-type="delete-task">delete_forever</i>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -302,26 +318,32 @@
                 <div id="container_main_actions_linked_task_template" class="row" data-type="sub-task">
                     <div class="col s12">
                         <div class="row">
-                            <div class="col s12">
-                                <label>Child task</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s9">
-                                <div class="row card-name">
-                                    <div class="col s11">
-                                        <span data-type="card-name"></span>
-                                        <input placeholder="Trello short link" type="hidden" class="validate" data-type="url" readonly="true">
+                            <div class="col s1">
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        <i class="small material-icons task-state-incomplete">query_builder</i>
+                                        <i class="small material-icons task-state-complete">check_box</i>
                                     </div>
-                                    <div class="col s1">
+                                </div>
+                            </div>
+                            <div class="col s11">
+                                <div class="row card-name">
+                                    <div class="col s12">
+                                        <span data-type="card-name"></span>
+                                        <input placeholder="Trello short link" class="pixel-sized validate" data-type="url" readonly="true">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        SHOW:<i class="small material-icons clickable trimes-action-show-task" data-trimes-side="main">vertical_align_top</i>
+                                        <i class="small material-icons clickable trimes-action-show-task" data-trimes-side="linked">arrow_forward</i>
                                         <i class="small material-icons clickable hide trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_child_task">open_in_new</i>
+                                        , COPY URL:<i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url">content_copy</i>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col s12 task-label-container">No Labels</div>
                                 </div>
-                            </div>
-                            <div class="col s3">
                             </div>
                         </div>
                     </div>
@@ -332,30 +354,32 @@
                 <div id="container_linked_actions_child_task_template" class="row hide" data-type="sub-task">
                     <div class="col s12">
                         <div class="row">
-                            <div class="col s12">
-                                <label>Child task</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s9">
-                                <div class="row card-name">
-                                    <div class="col s11">
-                                        <span data-type="card-name"></span>
-                                        <input placeholder="Trello short link" type="hidden" class="validate" data-type="url" readonly="true">
+                            <div class="col s1">
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        <i class="small material-icons task-state-incomplete">query_builder</i>
+                                        <i class="small material-icons task-state-complete">check_box</i>
                                     </div>
-                                    <div class="col s1">
+                                </div>
+                            </div>
+                            <div class="col s11">
+                                <div class="row card-name">
+                                    <div class="col s12">
+                                        <span data-type="card-name"></span>
+                                        <input placeholder="Trello short link" class="pixel-sized validate" data-type="url" readonly="true">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        SHOW:<i class="small material-icons clickable trimes-action-show-task" data-trimes-side="linked">vertical_align_top</i>
+                                        <i class="small material-icons clickable trimes-action-show-task" data-trimes-side="main">arrow_back</i>
                                         <i class="small material-icons clickable hide trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_linked_child_task">open_in_new</i>
+                                        , COPY URL:<i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url">content_copy</i>
+                                        , DELETE:<i class="small material-icons clickable" data-type="delete-task">delete_forever</i>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col s12 task-label-container">No Labels</div>
-                                </div>
-                            </div>
-                            <div class="col s3">
-                                <div class="row">
-                                    <div class="col s12 valign-wrapper">
-                                        <i class="small material-icons clickable" data-type="delete-task">delete_forever</i>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -364,26 +388,32 @@
                 <div id="container_linked_actions_linked_task_template" class="row" data-type="sub-task">
                     <div class="col s12">
                         <div class="row">
-                            <div class="col s12">
-                                <label>Child task</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s9">
-                                <div class="row card-name">
-                                    <div class="col s11">
-                                        <span data-type="card-name"></span>
-                                        <input placeholder="Trello short link" type="hidden" class="validate" data-type="url" readonly="true">
+                            <div class="col s1">
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        <i class="small material-icons task-state-incomplete">query_builder</i>
+                                        <i class="small material-icons task-state-complete">check_box</i>
                                     </div>
-                                    <div class="col s1">
+                                </div>
+                            </div>
+                            <div class="col s11">
+                                <div class="row card-name">
+                                    <div class="col s12">
+                                        <span data-type="card-name"></span>
+                                        <input placeholder="Trello short link" class="pixel-sized validate" data-type="url" readonly="true">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        SHOW:<i class="small material-icons clickable trimes-action-show-task" data-trimes-side="linked">vertical_align_top</i>
+                                        <i class="small material-icons clickable trimes-action-show-task" data-trimes-side="main">arrow_back</i>
                                         <i class="small material-icons clickable hide trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_linked_child_task">open_in_new</i>
+                                        , COPY URL:<i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url">content_copy</i>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col s12 task-label-container">No Labels</div>
                                 </div>
-                            </div>
-                            <div class="col s3">
                             </div>
                         </div>
                     </div>
@@ -395,7 +425,7 @@
             <div class="col s6">
                 <div class="row">
                     <div class="col s12">
-                        <ul class="tabs">
+                        <ul id="tab_main" class="tabs">
                             <li class="tab col s6"><a href="#container_main_checklist_child_task">Child Tasks (<span id="main_child_task_count">0</span>)</a></li>
                             <li class="tab col s6"><a href="#container_main_checklist_linked_task">Linked Tasks (<span id="main_linked_task_count">0</span>)</a></li>
                         </ul>
@@ -408,7 +438,7 @@
             <div class="col s6">
                 <div class="row">
                     <div class="col s12">
-                        <ul class="tabs">
+                        <ul id="tab_linked" class="tabs">
                             <li class="tab col s6"><a href="#container_linked_checklist_child_task">Child Tasks (<span id="linked_child_task_count">0</span>)</a></li>
                             <li class="tab col s6"><a href="#container_linked_checklist_linked_task">Linked Tasks (<span id="linked_linked_task_count">0</span>)</a></li>
                         </ul>
@@ -1100,6 +1130,8 @@
             await fetchTrelloSourceChecklists(card_id);
             updateParentTaskList(card_id, side_name);
             updateChildTaskList(card_id, side_name);
+            M.Tabs.getInstance($(`#tab_${side_name}`).get(0))
+                .select(`container_${side_name}_checklist_child_task`);
         }
 
         const updateParentTaskList = async (card_id, side = 'main') => {
@@ -1163,6 +1195,14 @@
                 input_url.val(check_item.name)
                     .data('original-value', check_item.name);
 
+                container.find('i.task-state-complete')
+                    .removeClass(check_item.state !== 'complete' && 'show' || 'hide')
+                    .addClass(check_item.state === 'complete' && 'show' || 'hide');
+
+                container.find('i.task-state-incomplete')
+                    .removeClass(check_item.state !== 'incomplete' && 'show' || 'hide')
+                    .addClass(check_item.state === 'incomplete' && 'show' || 'hide');
+
                 let cb_done = container.find('input[data-type="done"]');
                 cb_done.prop('checked', check_item.state === 'complete')
                     .data('card-id', card_id)
@@ -1193,11 +1233,15 @@
                         `#container_${side_name}_checklist_${type_name}_task #${check_item.id}`);
                 monitorTyping(btn_open_task.get(0), input_url.get(0));
 
-                setOpenTask(btn_open_task.get(0));
+                setOpenTask(btn_open_task.get(0), input_url.get(0));
 
                 if(check_item.name !== ''){
                     btn_open_task.removeClass('hide').addClass('show');
                 }
+
+                let btn_copy_url = container.find('i[data-type="copy-task-url"]');
+
+                setCopyTaskUrl(btn_copy_url.get(0), input_url.get(0));
 
                 let btn_delete_task = container.find('i[data-type="delete-task"]');
                 btn_delete_task.data('card-id', card_id)
@@ -1211,8 +1255,22 @@
                         M.toast( { html: 'Task item deleted successfully!'});
                     });
 
+                let btn_show_task = container.find('.trimes-action-show-task');
+                    btn_show_task.click(async event=>{
+                        event.stopPropagation();
+                        const element = $(event.target);
+                        const side_name = element.data('trimes-side') === 'main' && 'main' || 'linked';
+                        await switchToBoardById(element.data('board-id'), side_name);
+                        await switchToListById(element.data('list-id'), side_name);
+                        await switchToCardById(element.data('card-id'), side_name);
+                        M.toast({ html: `card is loaded to ${side_name} task!`});
+                });
+
                 //load card info and update task info
                 loadCardByUrl(check_item.name).then(child_card=>{
+                    btn_show_task.data('board-id', child_card.idBoard);
+                    btn_show_task.data('list-id', child_card.idList);
+                    btn_show_task.data('card-id', child_card.id);
                     container.find('div.card-name span[data-type="card-name"]')
                         .html(child_card.name);
                     const label_template = $(`#label_${side_name}_template`);
@@ -1234,127 +1292,6 @@
 
         const updateChildTaskList = async (card_id, side = 'main') => {
             return await updateSubTaskList(card_id, 'child', side);
-        }
-
-        const updateChildTaskList1 = async (card_id, side='main') => {
-            const side_name = side === 'linked' && 'linked' || 'main';
-            console.log('called updateChildTaskList()');
-            const card = getTrelloCard(card_id);
-            const child_list = getChildList(card_id);
-            const main_node_root = $(`#container_${side_name}_checklist_child_task`);
-            const main_node_card_id = $(main_node_root).data('card-id');
-            // compare the child list with the nodes in the current list
-            // clear if card id are different
-            if(main_node_card_id != card_id){
-                main_node_root.find('div[data-type="sub-task"]').each((index, dom)=>{
-                    $(dom).find('.clickable').each((index1, dom1) => {
-                            if (dom1) {
-                                $(dom1).off('click');
-                            }
-                        }
-                    );
-                    // cleanup monitor typing on each child node
-                    $(dom).find('.monitor-typing').each((index, dom2)=>{
-                        clearMonitorTyping(dom2);
-                    });
-                });
-                main_node_root.empty();
-            }
-            //remove deleted tasks
-            main_node_root.find('div[data-type="sub-task"]').each((index, dom)=>{
-                let check_item_id = $(dom).attr('id');
-                let match = child_list.checkItems.filter(check_item=>check_item.id === check_item_id);
-                if(match && match[0]) {
-                    return;
-                }
-                clearTaskDom(dom);
-                $(dom).remove();
-            });
-            //add new tasks
-            let task_count = 0;
-            child_list.checkItems.forEach(check_item => {
-                task_count ++;
-                if(main_node_root.find(`div[id="${check_item.id}"]`).length > 0) {
-                        return;
-                }
-                let container = $(`#container_${side_name}_actions_child_task_template`).clone(false);
-                container.attr('id', check_item.id)
-                    .data('card-id', card_id)
-                    .data('checklist-id', check_item.idChecklist)
-                    .removeClass('hide')
-                    .addClass('show');
-
-                let input_url = container.find('input[data-type="url"]');
-                input_url.val(check_item.name)
-                    .data('original-value', check_item.name);
-
-                let cb_done = container.find('input[data-type="done"]');
-                cb_done.prop('checked', check_item.state === 'complete')
-                    .data('card-id', card_id)
-                    .data('check-item-id', check_item.id)
-                    .data('checklist-id', check_item.idChecklist)
-                    .data('state', check_item.state)
-                    .click(async (event) => {
-                        const dom = $(event.target);
-                        event.stopPropagation();
-                        event.preventDefault();
-                        setCheckItemState(
-                            dom.data('card-id'),
-                            dom.data('check-item-id'),
-                            dom.data('state') !== 'complete'
-                            ).then(data=>{
-                                dom.data('state', data.state);
-                                dom.prop('checked', data.state === 'complete')
-                                fetchTrelloSourceChecklists(dom.data('card-id'));
-                                M.toast( {html: "Task updated successfully."} );
-                            }).catch(e=>{
-                                console.error(e);
-                            });
-                    });
-
-                let btn_open_task = container.find('i[data-type="open-task"]');
-                btn_open_task.data('task-id', check_item.id)
-                    .data('monitor-typing-source',
-                        `#container_${side_name}_checklist_child_task #${check_item.id}`);
-                monitorTyping(btn_open_task.get(0), input_url.get(0));
-
-                setOpenTask(btn_open_task.get(0));
-
-                if(check_item.name !== ''){
-                btn_open_task.removeClass('hide').addClass('show');
-                }
-
-                let btn_delete_task = container.find('i[data-type="delete-task"]');
-                btn_delete_task.data('card-id', card_id)
-                    .data('check-item-id', check_item.id)
-                    .data('checklist-id', check_item.idChecklist)
-                    .click(async (event) => {
-                        event.stopPropagation();
-                        const dom = $(event.target);
-                        await deleteChildTask(dom.data('card-id'),
-                            dom.data('checklist-id'), dom.data('check-item-id'));
-                        M.toast( { html: 'Task item deleted successfully!'});
-                    });
-
-                //load card info and update task info
-                loadCardByUrl(check_item.name).then(child_card=>{
-                    container.find('div.card-name span[data-type="card-name"]')
-                        .html(child_card.name);
-                    const label_template = $(`#label_${side_name}_template`);
-                    const label_container = container.find('.task-label-container');
-                    if(child_card.labels.length) {
-                        label_container.html('');
-                    }
-                    displayCardLabels(child_card, label_template, label_container);
-                });
-
-                let row = document.createElement('div');
-                $(row).addClass('col s12');
-                $(row).append(container);
-                main_node_root.append(row);
-            });
-            $('#main_child_task_count').html(task_count);
-            main_node_root.data('card-id', card_id);
         }
 
         const displayCardLabels = (card, label_template, container) => {
@@ -1559,15 +1496,32 @@
             source_dom.off('input');
         }
 
-        const setOpenTask = (dom) => {
-            $(dom).click((event)=>{
+        const setOpenTask = (btn, input) => {
+            $(btn).click((event)=>{
                 event.stopPropagation();
-                const dom = $(event.target);
-                const check_item_id = dom.data('task-id') || null;
-                const input_url = $(`#container_main_checklist_child_task div#${check_item_id} input[data-type="url"]`);
-                const url = input_url.length && String(input_url.data('original-value')).trim() || '';
+                const element = $(event.target);
+                const check_item_id = element.data('task-id') || null;
+                const url = $(input).length && String($(input).data('original-value')).trim() || '';
                 if(url !== ''){
-                    window.open(url, $(event.target).data('opener'));
+                    window.open(url, element.data('opener'));
+                } else {
+                    M.toast({ html: 'Task item doesn\'t contain a valid url!' });
+                }
+            });
+        }
+
+        const setCopyTaskUrl = (btn, input) => {
+            $(btn).click((event)=>{
+                event.stopPropagation();
+                const element = $(event.target);
+                const check_item_id = element.data('task-id') || null;
+                const copyText = $(input) && $(input).get(0) || null;
+
+                if(copyText){
+                    copyText.select();
+                    copyText.setSelectionRange(0, $(input).val().length);
+                    document.execCommand('copy');
+                    M.toast({ html: 'Task url is copied to clipboard.' });
                 } else {
                     M.toast({ html: 'Task item doesn\'t contain a valid url!' });
                 }
@@ -1764,6 +1718,15 @@
             return check_items;
         }
 
+        const extractIds = (side = 'main') => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            return {
+                board_id: $(`#dd_${side_name}_board`).data('board-id'),
+                list_id: $(`#dd_${side_name}_list`).data('list-id'),
+                card_id: $(`#dd_${side_name}_card`).data('card-id')
+            }
+        }
+
         const saveInputs = () => {
             Cookies.set('cookies_trimes_endpoint_url', $('#input_trimes_endpoint_url').val());
         };
@@ -1873,6 +1836,29 @@
                 await switchToListById(card.idList, side);
                 await switchToCardById(card.id, side);
             }
+        });
+
+        $('.trimes-action-swap-tasks').click(async event=>{
+            event.stopPropagation();
+            const {
+                board_id: main_board_id,
+                list_id: main_list_id,
+                card_id: main_card_id
+            } = extractIds('main');
+
+            const {
+                board_id: linked_board_id,
+                list_id: linked_list_id,
+                card_id: linked_card_id
+            } = extractIds('linked');
+
+            await switchToBoardById(main_board_id, 'linked');
+            await switchToBoardById(linked_board_id, 'main');
+            await switchToListById(main_list_id, 'linked');
+            await switchToListById(linked_list_id, 'main');
+            await switchToCardById(main_card_id, 'linked');
+            await switchToCardById(linked_card_id, 'main');
+            M.toast({ html: 'main task and linked task swapped!'});
         });
 
         await autoConnect().then(async connected=>{

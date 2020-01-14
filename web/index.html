@@ -1598,8 +1598,43 @@
             return board.labels.find(element=>element.name===name);
         }
 
-        const completeTask = async (card_id) => {
+        const checkLabelExistence = async (board_id, label_names = []) => {
+            let need_reload = false;
+            // get the labels
+            // if any label not exists, create one
+            let existing_labels = new Map(await Promise.all(label_names.map(async name =>{
+                const label = await getTrimesLabel(board_id, name);
+                if(!need_reload && !label) {
+                    need_reload = true;
+                }
+                return label && Promise.resolve([name, label]) ||
+                    Trello.rest('post', 'labels', {
+                        name: name,
+                        color: 'black',
+                        idBoard: board_id
+                    });
+            })));
+            if(need_reload){
+                await fetchTrelloSourceLabels(card.idBoard);
+            }
+
+            return true;
+
+        }
+
+        const completeTask = async (card_id, side = 'main') => {
+            console.log('callded reopenTask()');
+            const side_name = side === 'linked' && 'linked' || 'main';
             const card = getTrelloCard(card_id);
+
+            // if any label doesn't exist, create one
+            await checkLabelExistence(card.idBoard, [
+                TRIMES_LABEL_NAME_REOPEN, TRIMES_LABEL_NAME_DONE
+            ]);
+
+            let label_reopen = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_REOPEN);
+            let label_done = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_DONE);
+
             // task can only complete when every child task is completed
             const child_tasks = getChildList(card.id);
             let all_done = true, has_reopen = false;
@@ -1615,27 +1650,6 @@
                 return;
             }
 
-            let label_reopen = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_REOPEN);
-            let label_done = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_DONE);
-            //if label not exists, create one
-            if(!label_done){
-                label_done = await Trello.rest('post', 'labels', {
-                    name: TRIMES_LABEL_NAME_DONE,
-                    color: 'black',
-                    idBoard: card.idBoard
-                });
-                await fetchTrelloSourceLabels(card.idBoard);
-                label_done = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_DONE);
-            }
-            if (!label_reopen) {
-                label_reopen = await Trello.rest('post', 'labels', {
-                    name: TRIMES_LABEL_NAME_REOPEN,
-                    color: 'black',
-                    idBoard: card.idBoard
-                });
-                await fetchTrelloSourceLabels(card.idBoard);
-                label_reopen = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_REOPEN);
-            }
             // if card has a reopen label, remove it.
             // and if card doesn't have a done label, add it.
             let [detached_done, attached_reopen] = await Promise.all([
@@ -1652,7 +1666,7 @@
             // reload the card
             if(detached_done || attached_reopen){
                 await loadTrelloSourceCard(card_id, '0');
-                await refreshCard(card_id, 'main');
+                await refreshCard(card_id, side_name);
             }
         }
 
@@ -1660,18 +1674,14 @@
             console.log('callded reopenTask()');
             const side_name = side === 'linked' && 'linked' || 'main';
             const card = getTrelloCard(card_id);
+            // if any label doesn't exist, create one
+            await checkLabelExistence(card.idBoard, [
+                TRIMES_LABEL_NAME_REOPEN, TRIMES_LABEL_NAME_DONE
+            ]);
+
             let label_reopen = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_REOPEN);
             let label_done = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_DONE);
-            //if label not exists, create one
-            if(!label_reopen){
-                label_reopen = await Trello.rest('post', 'labels', {
-                    name: TRIMES_LABEL_NAME_REOPEN,
-                    color: 'black',
-                    idBoard: card.idBoard
-                });
-                await fetchTrelloSourceLabels(card.idBoard);
-                label_reopen = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_REOPEN);
-            }
+
             // if card has a done label, remove it.
             // and if card doesn't have a reopen label, add it.
             let [detached_done, attached_reopen] = await Promise.all([
@@ -1679,7 +1689,7 @@
                 !hasLabel(card, label_reopen.id) && attachLabel(card.id, label_reopen.id) || Promise.resolve(false)
             ]);
 
-            // mark it as complete on linked tasks
+            // mark it as re-open on linked tasks
             let check_items = await findCheckItemsInParentCard(card, 'complete');
             await Promise.all(check_items.map(check_item=>{
                 return setCheckItemState(check_item.card.id, check_item.check_item.id, false);

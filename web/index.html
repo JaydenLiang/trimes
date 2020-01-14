@@ -86,10 +86,24 @@
         </form>
         <div class="row">
             <div class="col s6">
-                <h4>Main Task <i class="material-icons clickable trimes-action-swap-tasks">repeat</i></h4>
+                <h4>Main Task</h4>
+                <div id="iconbar_trimes_main_task" class="valign-wrapper">
+                    SHOW:<i class="small material-icons clickable trimes-action-show-task" data-trimes-side="linked">arrow_forward</i>
+                    <i class="material-icons clickable trimes-action-swap-tasks">repeat</i>
+                    <i class="small material-icons clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_task">open_in_new</i>
+                    , BACK: <span class="clickable trimes-action-load-task-history" data-trimes-side="main"><i class="material-icons">replay</i><sub class="trimes-load-back-count">0</sub></span>
+                    , COPY: <i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url">content_copy</i>
+                </div>
             </div>
             <div class="col s6">
-                <h4>Linked Task <i class="material-icons clickable trimes-action-swap-tasks">repeat</i></h4>
+                <h4>Linked Task</h4>
+                <div id="iconbar_trimes_linked_task" class="valign-wrapper">
+                    SHOW:<i class="small material-icons clickable trimes-action-show-task" data-trimes-side="main">arrow_back</i>
+                    <i class="material-icons clickable trimes-action-swap-tasks">repeat</i>
+                    <i class="small material-icons clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_linked_task">open_in_new</i>
+                    , BACK: <span class="clickable trimes-action-load-task-history" data-trimes-side="linked"><i class="material-icons">replay</i><sub class="trimes-load-back-count">0</sub></span>
+                    , COPY: <i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url">content_copy</i>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -100,7 +114,7 @@
                 <a id="btn_main_load_card"
                     class="waves-effect waves-light btn-small trimes-action-load-card"
                     data-trimes-side="main"
-                    data-source-input="input_main_load_card_url">Load Card</a>
+                    data-source-input="input_main_load_card_url">Load Card</a>, or select
             </div>
             <div class="col s4">
                 <input placeholder="Url to load card" id="input_linked_load_card_url" type="text" class="validate" style="margin-bottom: 0px; height: 30px;">
@@ -109,7 +123,7 @@
                 <a id="btn_linked_load_card"
                     class="waves-effect waves-light btn-small trimes-action-load-card"
                     data-trimes-side="linked"
-                    data-source-input="input_linked_load_card_url">Load Card</a>
+                    data-source-input="input_linked_load_card_url">Load Card</a>, or select
             </div>
         </div>
         <div class="row">
@@ -227,16 +241,6 @@
             <div id="main_task_info" class="col s6"></div>
             <!-- info linked task -->
             <div id="linked_task_info" class="col s6"></div>
-        </div>
-        <div class="row">
-            <!-- label caption: main task -->
-            <div class="col s6">
-                Labels
-            </div>
-            <!-- label caption: linked task -->
-            <div class="col s6">
-                Labels
-            </div>
         </div>
         <div class="row">
             <!-- label: main task -->
@@ -468,6 +472,9 @@
     <script type="module">
     import Cookies from 'https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs'
     const EVENT_TRIMES_CONNECTED = 'TrimesConnected';
+    const TRIMES_TASK_HISTORY_MAX_COUNT = 20;
+    const TRIMES_TASK_HISTORY_COOKIES_KEY = 'trimes_${side_name}_task_history';
+    const TRIMES_TASK_HISTORY_KEY_SEPARATOR = '|***|';
     const PARENT_LIST_NAME = 'parent-task', CHILD_LIST_NAME = 'child-tasks';
     const TRIMES_LABEL_NAME_DONE = 'TR:DONE', TRIMES_LABEL_NAME_REOPEN = 'TR:RE-OPEN';
     let web_socket;
@@ -1018,7 +1025,7 @@
                     $(li).data('card-id', card.id);
                     $(li).data('list-id', card.idList);
                     $(li).click(async () => {
-                        switchToCard(li, dd_instance).then(card_id=>refreshCard(card_id, side));
+                        switchToCard(li, dd_instance).then(card_id=>refreshCardBody(card_id, side));
                     });
                     let a = document.createElement('a');
                     $(a).html(card.name);
@@ -1033,6 +1040,7 @@
             const dd_element = $(dd_instance.dropdownEl);
             const dd_button = $(dd_instance.el);
             const side = dd_button.data('trimes-side');
+            const side_name = side === 'linked' && 'linked' || 'main';
             const card_id = card_element && $(card_element).data('card-id') || slected_card_id || null;
             const card = card_id && getTrelloCard(card_id) || null;
 
@@ -1050,10 +1058,20 @@
                 return card_id;
             }
 
-            Cookies.set(`trimes_${side}_card_id`, card_id);
+            const current_card_id = Cookies.get(`trimes_${side_name}_card_id`);
+
+            Cookies.set(`trimes_${side_name}_card_id`, card_id);
 
             dd_element.data('card-id', card_id);
             $(dd_button).html(`card: ${card.name}`);
+
+            // if switch to a different card, update load card history
+            // safe for a reload of the same url because it doesn't cause a history update
+            if(current_card_id !== card_id) {
+                const current_card = getTrelloCard(current_card_id);
+                updateLoadTaskHistory(side_name, current_card.shortUrl);
+            }
+            refreshTaskHistoryCount(side_name);
 
             return card_id;
         }
@@ -1063,16 +1081,49 @@
             const dd_trigger = $(`#container_${side_name}_card .dropdown-trigger`).get(0);
             const dd_instance = M.Dropdown.getInstance(dd_trigger);
             await switchToCard(null, dd_instance, card_id);
-            await refreshCard(card_id, side_name);
+            await refreshCardBody(card_id, side_name);
         }
 
-        const refreshCard = async (card_id, side = 'main', clear = false) => {
+        const refreshCardFull = async (side, board_id, list_id, card_id, url) => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            let card = url && await loadCardByUrl(url) ||
+                card_id && await loadTrelloSourceCard(card_id) && getTrelloCard(card_id) || null;
+            if(card && card.id) {
+                board_id = card.idBoard;
+                list_id = card.idList;
+                card_id = card.id;
+                $(`#input_${side_name}_load_card_url`).val(card.shortUrl);
+            }
+
+            if(board_id) {
+                await switchToBoardById(board_id, side);
+            }
+            if(list_id) {
+                await switchToListById(list_id, side);
+            }
+            if(card_id) {
+                await switchToCardById(card_id, side);
+            }
+        }
+
+        const refreshCardBody = async (card_id, side = 'main', clear = false) => {
             const side_name = side === 'linked' && 'linked' || 'main';
             const card = getTrelloCard(card_id);
+            // update link url
+            $(`#input_${side_name}_load_card_url`).val(card.shortUrl);
+            Cookies.set(`trimes_${side}_load_card_url`, card.shortUrl);
+
             // update main card
             //card info
             $(`#${side_name}_task_info`).html(card.name);
             $(`#${side_name}_task_info`).data('card-id', card.id);
+
+            // update icon bar
+            let btn_show_task = $(`#iconbar_trimes_${side_name}_task .trimes-action-show-task`);
+            btn_show_task.data('board-id', card.idBoard);
+            btn_show_task.data('list-id', card.idList);
+            btn_show_task.data('card-id', card.id);
+
 
             //create labels
             const label_element = $(`#label_${side_name}_template`);
@@ -1138,6 +1189,72 @@
             return await updateSubTaskList(card_id, 'parent', side);
         }
 
+        const getTaskHistory = (side) => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const cookies_key = TRIMES_TASK_HISTORY_COOKIES_KEY.replace('${side_name}', side_name);
+            const history = Cookies.get(cookies_key) || '';
+            return {
+                history_string: history,
+                history_urls: history && history.split(TRIMES_TASK_HISTORY_KEY_SEPARATOR) || []
+            };
+        }
+
+        const getLastTaskUrlInHistory = (side) => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const {history_string, history_urls} = getTaskHistory(side);
+            return history_urls.length > 0 && history_urls[history_urls.length - 1] || null;
+        }
+
+        const refreshTaskHistoryCount = (side) => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const {history_string, history_urls} = getTaskHistory(side);
+            $(`#iconbar_trimes_${side_name}_task .trimes-load-back-count`).html(history_urls.length);
+        }
+
+        const updateLoadTaskHistory = (side, url = null) => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const cookies_key = TRIMES_TASK_HISTORY_COOKIES_KEY.replace('${side_name}', side_name);
+            let {history_string, history_urls} = getTaskHistory(side_name);
+            // if no url provided, pop the last
+            if(!url && history_urls.length > 0) {
+                url = history_urls.pop();
+                // update Cookies
+                Cookies.set(cookies_key, history_urls.join(TRIMES_TASK_HISTORY_KEY_SEPARATOR));
+                // update display history count
+                refreshTaskHistoryCount(side_name);
+                return url;
+            } else if (url) {
+                // if the url is the same as the last one in history, skip this
+                if(!(history_urls.length > 0 && url === history_urls[history_urls.length - 1])) {
+                    // if total history count === TRIMES_TASK_HISTORY_MAX_COUNT, shift one
+                    if(history_urls.length === TRIMES_TASK_HISTORY_MAX_COUNT) {
+                    history_urls.shift();
+                    }
+                    // push the new one
+                    history_urls.push(url);
+                    // update Cookies
+                    Cookies.set(cookies_key, history_urls.join(TRIMES_TASK_HISTORY_KEY_SEPARATOR));
+                }
+                // update display history count
+                refreshTaskHistoryCount(side_name);
+                return url;
+            }
+        }
+
+        const onBtnShowCardClick = async event => {
+            event.stopPropagation();
+            const element = $(event.target);
+            const side_name = element.data('trimes-side') === 'main' && 'main' || 'linked';
+            const board_id = element.data('board-id');
+            const list_id = element.data('list-id');
+            const card_id = element.data('card-id');
+            if(!(board_id && list_id && card_id)){
+                M.toast({ html: `No card is selected to show on ${side_name} task!`});
+                return;
+            }
+            await refreshCardFull(side_name, board_id, list_id, card_id);
+            M.toast({ html: `card is loaded to ${side_name} task!`});
+        }
 
         const updateSubTaskList = async (card_id, type = 'child', side = 'main') => {
             const type_name = type === 'child' && 'child' || 'linked';
@@ -1256,15 +1373,7 @@
                     });
 
                 let btn_show_task = container.find('.trimes-action-show-task');
-                    btn_show_task.click(async event=>{
-                        event.stopPropagation();
-                        const element = $(event.target);
-                        const side_name = element.data('trimes-side') === 'main' && 'main' || 'linked';
-                        await switchToBoardById(element.data('board-id'), side_name);
-                        await switchToListById(element.data('list-id'), side_name);
-                        await switchToCardById(element.data('card-id'), side_name);
-                        M.toast({ html: `card is loaded to ${side_name} task!`});
-                });
+                    btn_show_task.click(onBtnShowCardClick);
 
                 //load card info and update task info
                 loadCardByUrl(check_item.name).then(child_card=>{
@@ -1666,7 +1775,7 @@
             // reload the card
             if(detached_done || attached_reopen){
                 await loadTrelloSourceCard(card_id, '0');
-                await refreshCard(card_id, side_name);
+                await refreshCardBody(card_id, side_name);
             }
         }
 
@@ -1697,7 +1806,7 @@
             // reload the card
             if(detached_done || attached_reopen){
                 await loadTrelloSourceCard(card_id, '0');
-                await refreshCard(card_id, side_name);
+                await refreshCardBody(card_id, side_name);
             }
         }
 
@@ -1828,6 +1937,7 @@
             event.stopPropagation();
             const element = $(event.target);
             const side = element.data('trimes-side');
+            const side_name = side === 'linked' && 'linked' || 'main';
             const source_element_id = element.data('source-input');
 
             const card_url = getTrelloShortLink($(`#${source_element_id}`).val());
@@ -1837,15 +1947,7 @@
                 return;
             }
 
-            const card = await loadCardByUrl(card_url);
-
-            if(card && card.id) {
-                $(`#${source_element_id}`).val(card_url);
-                Cookies.set(`trimes_${side}_load_card_url`, card_url);
-                await switchToBoardById(card.idBoard, side);
-                await switchToListById(card.idList, side);
-                await switchToCardById(card.id, side);
-            }
+            await refreshCardFull(side_name, null, null, null, card_url);
         });
 
         $('.trimes-action-swap-tasks').click(async event=>{
@@ -1862,37 +1964,42 @@
                 card_id: linked_card_id
             } = extractIds('linked');
 
-            await switchToBoardById(main_board_id, 'linked');
-            await switchToBoardById(linked_board_id, 'main');
-            await switchToListById(main_list_id, 'linked');
-            await switchToListById(linked_list_id, 'main');
-            await switchToCardById(main_card_id, 'linked');
-            await switchToCardById(linked_card_id, 'main');
+            await Promise.all([
+                refreshCardFull('main', main_board_id, main_list_id, main_card_id),
+                refreshCardFull('linked', linked_board_id, linked_list_id, linked_card_id)
+            ]);
             M.toast({ html: 'main task and linked task swapped!'});
+        });
+
+        $('#iconbar_trimes_main_task .trimes-action-show-task').click(onBtnShowCardClick);
+        $('#iconbar_trimes_linked_task .trimes-action-show-task').click(onBtnShowCardClick);
+
+        $('.trimes-action-load-task-history').click(async event=>{
+            event.stopPropagation();
+            const element = $(event.currentTarget);
+            const side = element.data('trimes-side');
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const url = getLastTaskUrlInHistory(side_name);
+            await refreshCardFull(side_name, null, null, null, url).then(()=>{
+                updateLoadTaskHistory(side_name);
+            });
         });
 
         await autoConnect().then(async connected=>{
             if(connected){
                 $('#input_main_load_card_url').val(Cookies.get('trimes_main_load_card_url') || '');
                 $('#input_linked_load_card_url').val(Cookies.get('trimes_linked_load_card_url') || '');
-                if (Cookies.get('trimes_main_board_id') !== 'null') {
-                    await switchToBoardById(Cookies.get('trimes_main_board_id'), 'main');
-                }
-                if (Cookies.get('trimes_main_list_id') !== 'null') {
-                    await switchToListById(Cookies.get('trimes_main_list_id'), 'main');
-                }
-                if (Cookies.get('trimes_main_card_id') !== 'null') {
-                    await switchToCardById(Cookies.get('trimes_main_card_id'), 'main');
-                }
-                if (Cookies.get('trimes_linked_board_id') !== 'null') {
-                    await switchToBoardById(Cookies.get('trimes_linked_board_id'), 'linked');
-                }
-                if (Cookies.get('trimes_linked_list_id') !== 'null') {
-                    await switchToListById(Cookies.get('trimes_linked_list_id'), 'linked');
-                }
-                if (Cookies.get('trimes_linked_card_id') !== 'null') {
-                    await switchToCardById(Cookies.get('trimes_linked_card_id'), 'linked');
-                }
+
+                await Promise.all(['main', 'linked'].map(side_name=>{
+                    const board_id = Cookies.get(`trimes_${side_name}_board_id`);
+                    const list_id = Cookies.get(`trimes_${side_name}_list_id`);
+                    const card_id = Cookies.get(`trimes_${side_name}_card_id`);
+                    return refreshCardFull(side_name,
+                            board_id !== 'null' && board_id || null,
+                            list_id !== 'null' && list_id || null,
+                            card_id !== 'null' && card_id || null,
+                        );
+                }));
             }
         });
 

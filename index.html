@@ -1025,7 +1025,9 @@
                     $(li).data('card-id', card.id);
                     $(li).data('list-id', card.idList);
                     $(li).click(async () => {
-                        switchToCard(li, dd_instance).then(card_id=>refreshCardBody(card_id, side));
+                        switchToCard(li, dd_instance).then(card_id=>{
+                            refreshCardBody(card_id, side);
+                        });
                     });
                     let a = document.createElement('a');
                     $(a).html(card.name);
@@ -1035,14 +1037,20 @@
             }
         }
 
-        const switchToCard = async (card_element, dd_instance, slected_card_id = null) => {
+        const switchToCard = async (card_element, dd_instance,
+            slected_card_id = null, task_history = false) => {
             console.log('called switchToCard()');
             const dd_element = $(dd_instance.dropdownEl);
             const dd_button = $(dd_instance.el);
             const side = dd_button.data('trimes-side');
             const side_name = side === 'linked' && 'linked' || 'main';
-            const card_id = card_element && $(card_element).data('card-id') || slected_card_id || null;
-            const card = card_id && getTrelloCard(card_id) || null;
+            let card_id = card_element && $(card_element).data('card-id') || slected_card_id || null;
+            let card = card_id && getTrelloCard(card_id) || null;
+
+            if(task_history) {
+                const last_task_url = getLastTaskUrlInHistory(side_name);
+                card = await loadCardByUrl(last_task_url);
+            }
 
             // no card selected
             if (!card) {
@@ -1058,7 +1066,7 @@
                 return card_id;
             }
 
-            const current_card_id = Cookies.get(`trimes_${side_name}_card_id`);
+            const last_card_id = Cookies.get(`trimes_${side_name}_card_id`);
 
             Cookies.set(`trimes_${side_name}_card_id`, card_id);
 
@@ -1066,28 +1074,38 @@
             $(dd_button).html(`card: ${card.name}`);
 
             // if switch to a different card, update load card history
-            // safe for a reload of the same url because it doesn't cause a history update
-            if(current_card_id !== card_id) {
-                const current_card = getTrelloCard(current_card_id);
-                updateLoadTaskHistory(side_name, current_card.shortUrl);
+            if(!task_history && last_card_id !== card_id) {
+                const {data: last_card} = await loadTrelloSourceCard(last_card_id);
+                updateLoadTaskHistory(side_name, last_card.shortUrl);
+            } else {
+                updateLoadTaskHistory(side_name);
             }
             refreshTaskHistoryCount(side_name);
 
             return card_id;
         }
 
-        const switchToCardById = async (card_id, side = 'main') => {
+        const switchToCardById = async (card_id, side = 'main', task_history = false) => {
             const side_name = side === 'linked' && 'linked' || 'main';
             const dd_trigger = $(`#container_${side_name}_card .dropdown-trigger`).get(0);
             const dd_instance = M.Dropdown.getInstance(dd_trigger);
-            await switchToCard(null, dd_instance, card_id);
+            await switchToCard(null, dd_instance, card_id, task_history);
             await refreshCardBody(card_id, side_name);
         }
 
-        const refreshCardFull = async (side, board_id, list_id, card_id, url) => {
+        const refreshCardFull = async (side, board_id, list_id, card_id, url, task_history = false) => {
             const side_name = side === 'linked' && 'linked' || 'main';
+
+            if (task_history) {
+                board_id = null;
+                list_id = null;
+                card_id = null;
+                url = getLastTaskUrlInHistory(side_name);
+            }
+
             let card = url && await loadCardByUrl(url) ||
                 card_id && await loadTrelloSourceCard(card_id) && getTrelloCard(card_id) || null;
+
             if(card && card.id) {
                 board_id = card.idBoard;
                 list_id = card.idList;
@@ -1102,7 +1120,7 @@
                 await switchToListById(list_id, side);
             }
             if(card_id) {
-                await switchToCardById(card_id, side);
+                await switchToCardById(card_id, side, task_history);
             }
         }
 
@@ -1980,9 +1998,7 @@
             const side = element.data('trimes-side');
             const side_name = side === 'linked' && 'linked' || 'main';
             const url = getLastTaskUrlInHistory(side_name);
-            await refreshCardFull(side_name, null, null, null, url).then(()=>{
-                updateLoadTaskHistory(side_name);
-            });
+            await refreshCardFull(side_name, null, null, null, null, true);
         });
 
         await autoConnect().then(async connected=>{

@@ -1077,7 +1077,7 @@
             if(!task_history && last_card_id !== card_id) {
                 const {data: last_card} = await loadTrelloSourceCard(last_card_id);
                 updateLoadTaskHistory(side_name, last_card.shortUrl);
-            } else {
+            } else if (task_history) {
                 updateLoadTaskHistory(side_name);
             }
             refreshTaskHistoryCount(side_name);

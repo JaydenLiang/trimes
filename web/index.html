@@ -92,7 +92,7 @@
                     <i class="material-icons clickable trimes-action-swap-tasks">repeat</i>
                     <i class="small material-icons clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_task">open_in_new</i>
                     , BACK: <span class="clickable trimes-action-load-task-history" data-trimes-side="main"><i class="material-icons">replay</i><sub class="trimes-load-back-count">0</sub></span>
-                    , COPY: <i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url">content_copy</i>
+                    , COPY: <i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url" data-trimes-side="linked">content_copy</i>
                 </div>
             </div>
             <div class="col s6">
@@ -102,7 +102,7 @@
                     <i class="material-icons clickable trimes-action-swap-tasks">repeat</i>
                     <i class="small material-icons clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_linked_task">open_in_new</i>
                     , BACK: <span class="clickable trimes-action-load-task-history" data-trimes-side="linked"><i class="material-icons">replay</i><sub class="trimes-load-back-count">0</sub></span>
-                    , COPY: <i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url">content_copy</i>
+                    , COPY: <i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url" data-trimes-side="linked">content_copy</i>
                 </div>
             </div>
         </div>
@@ -114,7 +114,7 @@
                 <a id="btn_main_load_card"
                     class="waves-effect waves-light btn-small trimes-action-load-card"
                     data-trimes-side="main"
-                    data-source-input="input_main_load_card_url">Load Card</a>, or select
+                    data-source-input="input_main_load_card_url" data-type="url">Load Card</a>, or select
             </div>
             <div class="col s4">
                 <input placeholder="Url to load card" id="input_linked_load_card_url" type="text" class="validate" style="margin-bottom: 0px; height: 30px;">
@@ -123,7 +123,7 @@
                 <a id="btn_linked_load_card"
                     class="waves-effect waves-light btn-small trimes-action-load-card"
                     data-trimes-side="linked"
-                    data-source-input="input_linked_load_card_url">Load Card</a>, or select
+                    data-source-input="input_linked_load_card_url" data-type="url">Load Card</a>, or select
             </div>
         </div>
         <div class="row">
@@ -1327,8 +1327,7 @@
                     .addClass('show');
 
                 let input_url = container.find('input[data-type="url"]');
-                input_url.val(check_item.name)
-                    .data('original-value', check_item.name);
+                setUrlInput(input_url, check_item.name);
 
                 container.find('i.task-state-complete')
                     .removeClass(check_item.state !== 'complete' && 'show' || 'hide')
@@ -1623,11 +1622,14 @@
             source_dom.off('input');
         }
 
+        const setUrlInput = (element, url) => {
+            $(element).val(url).data('original-value', url);
+        }
+
         const setOpenTask = (btn, input) => {
             $(btn).click((event)=>{
                 event.stopPropagation();
                 const element = $(event.target);
-                const check_item_id = element.data('task-id') || null;
                 const url = $(input).length && String($(input).data('original-value')).trim() || '';
                 if(url !== ''){
                     window.open(url, element.data('opener'));
@@ -1641,18 +1643,28 @@
             $(btn).click((event)=>{
                 event.stopPropagation();
                 const element = $(event.target);
-                const check_item_id = element.data('task-id') || null;
-                const copyText = $(input) && $(input).get(0) || null;
+                const copyText = $(input) && getTrelloShortLink(input.val())
+                    && $(input).get(0)|| null;
+                const cursorPos = copyText && copyText.selectionStart || 0;
 
                 if(copyText){
                     copyText.select();
                     copyText.setSelectionRange(0, $(input).val().length);
+                    copyText.setSelectionRange(cursorPos, cursorPos);
                     document.execCommand('copy');
                     M.toast({ html: 'Task url is copied to clipboard.' });
                 } else {
                     M.toast({ html: 'Task item doesn\'t contain a valid url!' });
                 }
             });
+        }
+
+        const copyText = (element) => {
+            element.select();
+            element.setSelectionRange(0, $(element).val().length);
+            document.execCommand('copy');
+            element.setSelectionRange(0, 0);
+            return true;
         }
 
         const clearTaskDom = (dom) => {
@@ -1983,14 +1995,31 @@
             } = extractIds('linked');
 
             await Promise.all([
-                refreshCardFull('main', main_board_id, main_list_id, main_card_id),
-                refreshCardFull('linked', linked_board_id, linked_list_id, linked_card_id)
+                refreshCardFull('main', linked_board_id, linked_list_id, linked_card_id),
+                refreshCardFull('linked', main_board_id, main_list_id, main_card_id)
             ]);
             M.toast({ html: 'main task and linked task swapped!'});
         });
 
+        // setup the main icon bar icons
         $('#iconbar_trimes_main_task .trimes-action-show-task').click(onBtnShowCardClick);
+        setOpenTask(
+            $('#iconbar_trimes_main_task .trimes-action-open-task'),
+            $('#input_main_load_card_url'));
+        setCopyTaskUrl(
+            $('#iconbar_trimes_main_task .trimes-action-copy-link'),
+            $('#input_main_load_card_url')
+        );
+
+        // setup the linked icon bar icons
         $('#iconbar_trimes_linked_task .trimes-action-show-task').click(onBtnShowCardClick);
+        setOpenTask(
+            $('#iconbar_trimes_linked_task .trimes-action-open-task'),
+            $('#input_linked_load_card_url'));
+        setCopyTaskUrl(
+            $('#iconbar_trimes_linked_task .trimes-action-copy-link'),
+            $('#input_linked_load_card_url')
+        );
 
         $('.trimes-action-load-task-history').click(async event=>{
             event.stopPropagation();
@@ -2003,8 +2032,10 @@
 
         await autoConnect().then(async connected=>{
             if(connected){
-                $('#input_main_load_card_url').val(Cookies.get('trimes_main_load_card_url') || '');
-                $('#input_linked_load_card_url').val(Cookies.get('trimes_linked_load_card_url') || '');
+                setUrlInput($('#input_main_load_card_url'),
+                    Cookies.get('trimes_main_load_card_url') || '');
+                setUrlInput($('#input_linked_load_card_url'),
+                    Cookies.get('trimes_linked_load_card_url') || '');
 
                 await Promise.all(['main', 'linked'].map(side_name=>{
                     const board_id = Cookies.get(`trimes_${side_name}_board_id`);

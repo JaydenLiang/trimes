@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+    <style>
+        .clickable {
+            cursor: pointer;
+        }
+        .pixel-sized {
+            width: 1px !important;
+            height: 1px !important;
+        }
+        .trimes-label {
+            margin-left: 3px;
+            margin-bottom: 3px;
+        }
+        .trimes-label:hover {
+            opacity: 1;
+            cursor: default;
+        }
+        .trello-color-no-color, .trello-color-no-color:hover {
+            background-color: #b3bac5
+        }
+        .trello-color-green, .trello-color-green:hover {
+            background-color: #61bd4f
+        }
+        .trello-color-yellow, .trello-color-yellow:hover {
+            background-color: #f2d600
+        }
+        .trello-color-orange, .trello-color-orange:hover {
+            background-color: #ff9f1a
+        }
+        .trello-color-red, .trello-color-red:hover {
+            background-color: #eb5a46
+        }
+        .trello-color-purple, .trello-color-purple:hover {
+            background-color: #c377e0
+        }
+        .trello-color-blue, .trello-color-blue:hover {
+            background-color: #0079bf
+        }
+        .trello-color-sky, .trello-color-sky:hover {
+            background-color: #00c2e0
+        }
+        .trello-color-lime, .trello-color-lime:hover {
+            background-color: #51e898
+        }
+        .trello-color-pink, .trello-color-pink:hover {
+            background-color: #ff78cb
+        }
+        .trello-color-black, .trello-color-black:hover {
+            background-color: #344563
+        }
+    </style>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+    <div class="row">
+        <form class="col s12">
+            <div class="row">
+                <div id="btn_cookies_usage_notification" class="input-field col s12 ">
+                    <a class="waves-effect waves-light btn"><i class="material-icons right">cloud</i>Cookies Notification</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s8">
+                    <input placeholder="Trimes endpoint url" id="input_trimes_endpoint_url" type="text" class="validate">
+                    <label for="input_trimes_endpoint_url">Trimes Endpoint URL</label>
+                </div>
+                <div class="input-field col s4">
+                    <a id="btn_trimes_endpoint_url" class="waves-effect waves-light btn"><i class="material-icons right">cloud</i>connect</a>
+                    <span>
+                        <label>
+                            <input id="cb_auto_connect" type="checkbox" class="filled-in"/>
+                            <span>Auto connect</span>
+                        </label>
+                    </span>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col s6">
+                <h4>Main Task</h4>
+                <div id="iconbar_trimes_main_task" class="valign-wrapper">
+                    SHOW:<i class="small material-icons clickable trimes-action-show-task" data-trimes-side="linked">arrow_forward</i>
+                    <i class="material-icons clickable trimes-action-swap-tasks">repeat</i>
+                    <i class="small material-icons clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_task">open_in_new</i>
+                    , BACK: <span class="clickable trimes-action-load-task-history" data-trimes-side="main"><i class="material-icons">replay</i><sub class="trimes-load-back-count">0</sub></span>
+                    , COPY: <i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url" data-trimes-side="linked">content_copy</i>
+                </div>
+            </div>
+            <div class="col s6">
+                <h4>Linked Task</h4>
+                <div id="iconbar_trimes_linked_task" class="valign-wrapper">
+                    SHOW:<i class="small material-icons clickable trimes-action-show-task" data-trimes-side="main">arrow_back</i>
+                    <i class="material-icons clickable trimes-action-swap-tasks">repeat</i>
+                    <i class="small material-icons clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_linked_task">open_in_new</i>
+                    , BACK: <span class="clickable trimes-action-load-task-history" data-trimes-side="linked"><i class="material-icons">replay</i><sub class="trimes-load-back-count">0</sub></span>
+                    , COPY: <i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url" data-trimes-side="linked">content_copy</i>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s4">
+                <input placeholder="Url to load card" id="input_main_load_card_url" type="text" class="validate" style="margin-bottom: 0px; height: 30px;">
+            </div>
+            <div class="col s2">
+                <a id="btn_main_load_card"
+                    class="waves-effect waves-light btn-small trimes-action-load-card"
+                    data-trimes-side="main"
+                    data-source-input="input_main_load_card_url" data-type="url">Load Card</a>, or select
+            </div>
+            <div class="col s4">
+                <input placeholder="Url to load card" id="input_linked_load_card_url" type="text" class="validate" style="margin-bottom: 0px; height: 30px;">
+            </div>
+            <div class="col s2">
+                <a id="btn_linked_load_card"
+                    class="waves-effect waves-light btn-small trimes-action-load-card"
+                    data-trimes-side="linked"
+                    data-source-input="input_linked_load_card_url" data-type="url">Load Card</a>, or select
+            </div>
+        </div>
+        <div class="row">
+            <!-- main board -->
+            <div id="container_main_board" class="dropdown-field col s6 trello-board-container">
+                <a class='dropdown-trigger btn' href='#'
+                    data-target='dd_main_board'
+                    data-trello-type="board"
+                    data-trimes-side="main">Select Board</a>
+                    <!-- Dropdown Structure -->
+                    <ul id='dd_main_board' class='dropdown-content'></ul>
+            </div>
+            <!-- linked board -->
+            <div id="container_linked_board" class="dropdown-field col s6 trello-board-container">
+                <a class='dropdown-trigger btn' href='#'
+                    data-target='dd_linked_board'
+                    data-trello-type="board"
+                    data-trimes-side="linked">Select Board</a>
+                <!-- Dropdown Structure -->
+                <ul id='dd_linked_board' class='dropdown-content'></ul>
+            </div>
+        </div>
+        <div class="row">
+            <!-- main list -->
+            <div id="container_main_list" class="dropdown-field col s6 trello-list-container">
+                <a class='dropdown-trigger btn' href='#'
+                    data-target='dd_main_list'
+                    data-associated-dropdown="dd_main_board"
+                    data-trello-type="list"
+                    data-trimes-side="main">Select List</a>
+                <!-- Dropdown Structure -->
+                <ul id='dd_main_list' class='dropdown-content'></ul>
+            </div>
+            <!-- linked list -->
+            <div id="container_linked_list" class="dropdown-field col s6 trello-list-container">
+                <a class='dropdown-trigger btn' href='#'
+                    data-target='dd_linked_list'
+                    data-associated-dropdown="dd_linked_board"
+                    data-trello-type="list"
+                    data-trimes-side="linked">Select List</a>
+                <!-- Dropdown Structure -->
+                <ul id='dd_linked_list' class='dropdown-content'></ul>
+            </div>
+        </div>
+        <div class="row">
+            <!-- main card -->
+            <div id="container_main_card" class="dropdown-field col s6 trello-card-container">
+                <a class='dropdown-trigger btn' href='#' data-target='dd_main_card'
+                    data-associated-dropdown="dd_main_list"
+                    data-trello-type="card"
+                    data-trimes-side="main">Select Card</a>
+                <!-- Dropdown Structure -->
+                <ul id='dd_main_card' class='dropdown-content'></ul>
+            </div>
+            <!-- linked card -->
+            <div id="container_linked_card" class="dropdown-field col s6 trello-card-container">
+                <a class='dropdown-trigger btn' href='#' data-target='dd_linked_card'
+                    data-associated-dropdown="dd_linked_list"
+                    data-trello-type="card"
+                    data-trimes-side="linked">Select Card</a>
+                <!-- Dropdown Structure -->
+                <ul id='dd_linked_card' class='dropdown-content'></ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 center">
+            </div>
+        </div>
+        <div class="row">
+            <!-- main task -->
+            <div id="caption_main_checklist_parent_task" class="col s6">
+                <div class="row">
+                    <!-- main task -->
+                    <div class="col s6">
+                        Main Task Info
+                    </div>
+                    <!-- task status -->
+                    <div class="col s2">
+                        <span id="icon_main_task_new" class="hide valign-wrapper"><i class="small material-icons">center_focus_strong</i>NEW</span>
+                        <span id="icon_main_task_complete" class="hide valign-wrapper"><i class="small material-icons">check_box</i>COMPLETE</span>
+                        <span id="icon_main_task_reopen" class="hide valign-wrapper"><i class="small material-icons">error_outline</i>REOPEN</span>
+                    </div>
+                    <!-- action buttons -->
+                    <div class="col s3">
+                        <a id="btn_main_task_complete" class="hide btn-small valign-wrapper trimes-action-complete-task" data-trimes-side="main"><i class="small material-icons left">check_box</i>COMPLETE</a>
+                        <a id="btn_main_task_reopen" class="hide btn-small valign-wrapper trimes-action-reopen-task" data-trimes-side="main"><i class="small material-icons left">error_outline</i>REOPEN</a>
+                    </div>
+                    <div class="col s1"></div>
+                </div>
+            </div>
+            <!-- linked task -->
+            <div id="caption_linked_checklist_parent_task" class="col s6">
+                <div class="row">
+                    <!-- linked task -->
+                    <div class="col s6">
+                        Linked Task Info
+                    </div>
+                    <!-- task status -->
+                    <div class="col s2">
+                        <span id="icon_linked_task_new" class="hide valign-wrapper"><i class="small material-icons">center_focus_strong</i>NEW</span>
+                        <span id="icon_linked_task_complete" class="hide valign-wrapper"><i class="small material-icons">check_box</i>COMPLETE</span>
+                        <span id="icon_linked_task_reopen" class="hide valign-wrapper"><i class="small material-icons">error_outline</i>REOPEN</span>
+                    </div>
+                    <!-- action buttons -->
+                    <div class="col s3">
+                        <a id="btn_linked_task_complete" class="hide btn-small valign-wrapper trimes-action-complete-task" data-trimes-side="linked"><i class="small material-icons left">check_box</i>COMPLETE</a>
+                        <a id="btn_linked_task_reopen" class="hide btn-small valign-wrapper trimes-action-reopen-task" data-trimes-side="linked"><i class="small material-icons left">error_outline</i>REOPEN</a>
+                    </div>
+                    <div class="col s1"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- info main task -->
+            <div id="main_task_info" class="col s6"></div>
+            <!-- info linked task -->
+            <div id="linked_task_info" class="col s6"></div>
+        </div>
+        <div class="row">
+            <!-- label: main task -->
+            <div id="caption_main_checklist_parent_task" class="col s6">
+                <a id="label_main_template" class="btn-small hide">NEW</a>
+            </div>
+            <!-- label: linked task -->
+            <div id="caption_linked_checklist_parent_task" class="col s6">
+                <a id="label_linked_template" class="btn hide">NEW</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s6">Add a child task:</div>
+            <div class="col s6">Add a child task:</div>
+        </div>
+        <div class="row">
+            <div class="col s6">
+                <!-- label: main child task -->
+                <div id="container_main_actions_child_task" class="row">
+                    <div class="col s10">
+                        <label for="template_input_main_child_task_url">Trello short url</label>
+                        <input id="template_input_main_child_task_url" placeholder="child task Trello short link" type="text" class="validate">
+                    </div>
+                    <div class="col s2">
+                        <i id="action_main_add_child_task" class="small material-icons clickable trimes-action-add-child-task" data-trimes-side="main">add_box</i>
+                    </div>
+                </div>
+            </div>
+            <div class="col s6">
+                <!-- label: linked child task -->
+                <div id="container_linked_actions_child_task" class="row">
+                    <div class="col s10">
+                        <label for="template_input_linked_child_task_url">Trello short url</label>
+                        <input id="template_input_linked_child_task_url" placeholder="child task Trello short link" type="text" class="validate">
+                    </div>
+                    <div class="col s2">
+                        <i id="action_linked_add_child_task" class="small material-icons clickable trimes-action-add-child-task" data-trimes-side="main">add_box</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hide row">
+            <!-- actions for main checklist: child task -->
+            <div class="input-field col s6">
+                <div id="container_main_actions_child_task_template" class="row hide" data-type="sub-task">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s1">
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        <i class="small material-icons task-state-incomplete">query_builder</i>
+                                        <i class="small material-icons task-state-complete">check_box</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s11">
+                                <div class="row card-name">
+                                    <div class="col s12">
+                                        <span data-type="card-name"></span>
+                                        <input placeholder="Trello short link" class="pixel-sized validate" data-type="url" readonly="true">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        SHOW:<i class="small material-icons clickable trimes-action-show-task" data-trimes-side="main">vertical_align_top</i>
+                                        <i class="small material-icons clickable trimes-action-show-task" data-trimes-side="linked">arrow_forward</i>
+                                        <i class="small material-icons clickable hide trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_child_task">open_in_new</i>
+                                        , COPY URL:<i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url">content_copy</i>
+                                        , DELETE:<i class="small material-icons clickable" data-type="delete-task">delete_forever</i>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 task-label-container">No Labels</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="container_main_actions_linked_task_template" class="row" data-type="sub-task">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s1">
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        <i class="small material-icons task-state-incomplete">query_builder</i>
+                                        <i class="small material-icons task-state-complete">check_box</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s11">
+                                <div class="row card-name">
+                                    <div class="col s12">
+                                        <span data-type="card-name"></span>
+                                        <input placeholder="Trello short link" class="pixel-sized validate" data-type="url" readonly="true">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        SHOW:<i class="small material-icons clickable trimes-action-show-task" data-trimes-side="main">vertical_align_top</i>
+                                        <i class="small material-icons clickable trimes-action-show-task" data-trimes-side="linked">arrow_forward</i>
+                                        <i class="small material-icons clickable hide trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_child_task">open_in_new</i>
+                                        , COPY URL:<i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url">content_copy</i>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 task-label-container">No Labels</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- actions for linked checklist: child task -->
+            <div class="input-field col s6">
+                <div id="container_linked_actions_child_task_template" class="row hide" data-type="sub-task">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s1">
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        <i class="small material-icons task-state-incomplete">query_builder</i>
+                                        <i class="small material-icons task-state-complete">check_box</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s11">
+                                <div class="row card-name">
+                                    <div class="col s12">
+                                        <span data-type="card-name"></span>
+                                        <input placeholder="Trello short link" class="pixel-sized validate" data-type="url" readonly="true">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        SHOW:<i class="small material-icons clickable trimes-action-show-task" data-trimes-side="linked">vertical_align_top</i>
+                                        <i class="small material-icons clickable trimes-action-show-task" data-trimes-side="main">arrow_back</i>
+                                        <i class="small material-icons clickable hide trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_linked_child_task">open_in_new</i>
+                                        , COPY URL:<i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url">content_copy</i>
+                                        , DELETE:<i class="small material-icons clickable" data-type="delete-task">delete_forever</i>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 task-label-container">No Labels</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="container_linked_actions_linked_task_template" class="row" data-type="sub-task">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s1">
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        <i class="small material-icons task-state-incomplete">query_builder</i>
+                                        <i class="small material-icons task-state-complete">check_box</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s11">
+                                <div class="row card-name">
+                                    <div class="col s12">
+                                        <span data-type="card-name"></span>
+                                        <input placeholder="Trello short link" class="pixel-sized validate" data-type="url" readonly="true">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 valign-wrapper">
+                                        SHOW:<i class="small material-icons clickable trimes-action-show-task" data-trimes-side="linked">vertical_align_top</i>
+                                        <i class="small material-icons clickable trimes-action-show-task" data-trimes-side="main">arrow_back</i>
+                                        <i class="small material-icons clickable hide trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_linked_child_task">open_in_new</i>
+                                        , COPY URL:<i class="small material-icons clickable trimes-action-copy-link" data-type="copy-task-url">content_copy</i>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 task-label-container">No Labels</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- main checklist: child task -->
+            <div class="col s6">
+                <div class="row">
+                    <div class="col s12">
+                        <ul id="tab_main" class="tabs">
+                            <li class="tab col s6"><a href="#container_main_checklist_child_task">Child Tasks (<span id="main_child_task_count">0</span>)</a></li>
+                            <li class="tab col s6"><a href="#container_main_checklist_linked_task">Linked Tasks (<span id="main_linked_task_count">0</span>)</a></li>
+                        </ul>
+                    </div>
+                    <div id="container_main_checklist_child_task" class="col s12"></div>
+                    <div id="container_main_checklist_linked_task" class="col s12"></div>
+                </div>
+            </div>
+            <!-- linked checklist: child task -->
+            <div class="col s6">
+                <div class="row">
+                    <div class="col s12">
+                        <ul id="tab_linked" class="tabs">
+                            <li class="tab col s6"><a href="#container_linked_checklist_child_task">Child Tasks (<span id="linked_child_task_count">0</span>)</a></li>
+                            <li class="tab col s6"><a href="#container_linked_checklist_linked_task">Linked Tasks (<span id="linked_linked_task_count">0</span>)</a></li>
+                        </ul>
+                    </div>
+                    <div id="container_linked_checklist_child_task" class="col s12"></div>
+                    <div id="container_linked_checklist_linked_task" class="col s12"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <!-- Modal Structure -->
+        <div id="modal_cookies_usage_consent" class="modal">
+            <div class="modal-content">
+                <h4>Cookies and Session storage notification</h4>
+                <p>This site uses cookies. They are used to auto-fill some inputs on each page. We do not collect nor transfer your data to use outside of this website. By continuing to use the site, you consent to the use of these cookies.</p>
+            </div>
+            <div class="modal-footer">
+                <a id="link_cookies_usage_consent" class="modal-close waves-effect waves-green btn-flat">Agree & Close</a>
+            </div>
+        </div>
+    </div>
+    <!--JavaScript at end of body for optimized loading-->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs"></script>
+    <script type="module">
+    import Cookies from 'https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs'
+    const EVENT_TRIMES_CONNECTED = 'TrimesConnected';
+    const TRIMES_TASK_HISTORY_MAX_COUNT = 20;
+    const TRIMES_TASK_HISTORY_COOKIES_KEY = 'trimes_${side_name}_task_history';
+    const TRIMES_TASK_HISTORY_KEY_SEPARATOR = '|***|';
+    const PARENT_LIST_NAME = 'parent-task', CHILD_LIST_NAME = 'child-tasks';
+    const TRIMES_LABEL_NAME_DONE = 'TR:DONE', TRIMES_LABEL_NAME_REOPEN = 'TR:RE-OPEN';
+    let web_socket;
+    let trello_boards = {etag: "", data: []}, trello_lists = new Map(), trello_cards = new Map();
+    $(document).ready(async ()=>{
+        let modal_elements = document.querySelectorAll('.modal');
+        let modal_instances = M.Modal.init(modal_elements);
+        let modal_cookies_usage_consent = M.Modal.getInstance($('#modal_cookies_usage_consent'));
+
+        const delay = async (dom, duration = 'fast', onOccur, onComplete, ...args) => {
+            const du = duration === 'fast' && 200 || 600;
+            if($(dom).data('in-delay')){
+                 $(dom).data('in-delay', du);
+                 if(onOccur){
+                    onOccur(dom);
+                 }
+            } else {
+                new Promise((resolve) => {
+                    $(dom).data('in-delay', du);
+                    let intv = 100;
+                    let interval = setInterval(() => {
+                        if(!$(dom).length) {
+                            return;
+                        }
+                        let current_delay = Number($(dom).data('in-delay'));
+                        current_delay -= intv;
+                        if(current_delay < 0) {
+                            clearInterval(interval);
+                            if($(dom).length) {
+                                $(dom).data('in-delay', null);
+                                if(onComplete){
+                                    onComplete(dom);
+                                }
+                            }
+                        } else {
+                            $(dom).data('in-delay', current_delay);
+                        }
+                    }, intv);
+                    if(onOccur){
+                        onOccur(dom);
+                    }
+                })
+            }
+        };
+
+        const verifyCookiesConsent = () => {
+            console.info('called verifyCookiesConsent()');
+            if (!Cookies.get('cookies_usage_consent')) {
+                modal_cookies_usage_consent.open();
+                return false;
+            }
+            return true;
+        }
+
+        const consentToUseCookies = () => {
+            console.info('called consentToUseCookies()');
+            Cookies.set('cookies_usage_consent', true);
+        }
+        const resetCookiesConsent = () => {
+            console.info('called resetCookiesConsent()');
+            Cookies.remove('cookies_usage_consent');
+            verifyCookiesConsent();
+        }
+
+        const connectToTrimesEndpoint = async () => {
+            if(!validateTrimesEndpointUrl()) {
+
+            }
+            saveInputs();
+            let trimesEndpointUrl = String($('#input_trimes_endpoint_url').val());
+            if(!trimesEndpointUrl.endsWith('/')){
+                trimesEndpointUrl += '/';
+            }
+            Cookies.set('trimes_end_point_url', trimesEndpointUrl);
+            let wsTrimesEndpointUrl = await $.get(trimesEndpointUrl + 'wssep').done();
+            console.log(wsTrimesEndpointUrl)
+            if(wsTrimesEndpointUrl === 'undefined'){
+                throw new Error('failed to connect to the Trimes Endpoint.');
+            } else {
+            web_socket = new WebSocket(wsTrimesEndpointUrl);
+            web_socket.onopen = wsOnOpen;
+            web_socket.onclose = wsOnClose;
+            web_socket.onmessage = wsMessage;
+            web_socket.onerror = wsOnError;
+            }
+        }
+
+        const wsOnOpen = async (event) => {
+            console.info('called wsOnOpen()');
+            console.info(event);
+            if(!sessionStorage.getItem('trimesapikey')) {
+                let trimesApiKey = await getTrimesApiKey();
+                if(trimesApiKey) {
+                    sessionStorage.setItem('trimesapikey', trimesApiKey);
+                }
+            }
+            // go through Trello Auth
+            await doTrelloAuth();
+            await fetchTrelloSourceBoards();
+            window.dispatchEvent(new Event(EVENT_TRIMES_CONNECTED));
+        }
+        const wsOnClose = (event) => {
+            console.info('called wsOnClose()');
+        }
+        const wsMessage = (event) => {
+            console.info('called wsMessage()');
+        }
+        const wsOnError = (event) => {
+            console.info('called wsOnError()');
+        }
+
+        const getTrimesApiKey = async (event) => {
+            console.info('called getTrimesApiKey()');
+            try {
+                return await $.get(Cookies.get('trimes_end_point_url') + 'apikey').done();
+            } catch (error) {
+                return null;
+            }
+        }
+
+        const doTrelloAuth = async (event) => {
+            console.info('called doTrelloAuth()');
+            const api_key = sessionStorage.getItem('trimesapikey');
+            if(!api_key) {
+                console.error('Trimes API key not found.');
+                return;
+            }
+            // Trello name space isn't available
+            try {
+                if(Trello) {
+                    console.info('Trello library is loaded.');
+                }
+            } catch (error) {
+                await $.getScript(`https://trello.com/1/client.js?key=${api_key}`).done();
+            }
+
+            // return JSON.parse(response);
+            const auth = async () => {
+                const expirations = new Map();
+                expirations.set('1hour', 3600000);
+                expirations.set('1day', 86400000);
+                expirations.set('30day', 2592000000);
+                expirations.set('never', NaN);
+                const auth_expiration = '1day';
+                if(Number(sessionStorage.getItem('trello_auth_expiration')) < Date.now()){
+                    Trello.deauthorize();
+                    sessionStorage.removeItem('trello_auth_expiration');
+                }
+                return new Promise((resolve, reject) => {
+                    Trello.authorize({
+                        type: 'popup',
+                        name: 'Trimes!',
+                        persist: true,
+                        scope: {
+                            read: true,
+                            write: true,
+                            account: false
+                        },
+                        expiration: auth_expiration,
+                        success: (data) => {
+                            if(!sessionStorage.getItem('trello_auth_expiration')) {
+                                sessionStorage.setItem('trello_auth_expiration',
+                                    Date.now() + expirations.get(auth_expiration));
+                            }
+                            resolve(true);
+                        },
+                        error: (data) => {
+                            reject(data);
+                        }
+                    })
+                });
+            }
+            await auth();
+        }
+
+        const fetchTrelloSourceBoards = async () =>{
+            console.info('called fetchTrelloSourceBoards()');
+            if(!(Trello && Trello.token())){
+                console.error('Trello authorization incomplete.');
+                return;
+            }
+            const me = await Trello.members.get('me');
+            let tasks = [];
+            me.idBoards.forEach((id)=>{
+                console.log(id);
+                tasks.push(Trello.boards.get(id));
+            });
+
+            const boards = await Promise.all(tasks);
+            trello_boards = {
+                etag: Date.now(),
+                data: boards
+            };
+        }
+
+        const fetchTrelloSourceLists = async (board_id) => {
+            console.info('called fetchTrelloSourceLists()');
+            if (!(Trello && Trello.token())) {
+                console.error('Trello authorization incomplete.');
+                return;
+            }
+            const lists = await Trello.rest('get', `board/${board_id}/lists`);
+            const etag = Date.now();
+            lists.map(list=>{
+                trello_lists.set(list.id, {
+                    etag: etag,
+                    data: list
+                });
+            });
+        }
+
+        const fetchTrelloSourceCards = async (list_id) => {
+            console.info('called fetchTrelloSourceCards()');
+            if (!(Trello && Trello.token())) {
+                console.error('Trello authorization incomplete.');
+                return;
+            }
+            const cards = await Trello.rest('get', `lists/${list_id}/cards`);
+            const etag = Date.now();
+            cards.map(card => {
+                trello_cards.set(card.id, {
+                    etag: etag,
+                    data: card
+                });
+            });
+        }
+
+        const loadTrelloSourceCard = async (card_id, etag = null) => {
+            console.info('called loadTrelloSourceCard()');
+            if (!(Trello && Trello.token())) {
+                console.error('Trello authorization incomplete.');
+                return;
+            }
+
+            let card = trello_cards.get(card_id);
+
+            //need reload against an etag?
+            if(!card || etag !== null) {
+                if(!card || card && card.etag && card.etag !== etag){
+                    card = {
+                        etag: Date.now(),
+                        data: await Trello.rest('get', `cards/${card_id}`)
+                    };
+                    trello_cards.set(card_id, card);
+                    // reload checklists
+                    await fetchTrelloSourceChecklists(card_id);
+                    console.log(`card (id:${card_id}) is reloaded.`);
+                }
+            }
+            return trello_cards.get(card_id);
+        }
+
+        const fetchTrelloSourceChecklists = async (card_id) => {
+            console.info('called fetchTrelloSourceChecklists()');
+            if (!(Trello && Trello.token())) {
+                console.error('Trello authorization incomplete.');
+                return;
+            }
+            const card = trello_cards.get(card_id);
+            const checklists = await Trello.rest('get', `cards/${card_id}/checklists`);
+            const etag = Date.now();
+            card.data.checklists = {
+                etag: etag,
+                data: new Map()
+            };
+            checklists.map(checklist=>{
+                card.data.checklists.data.set(checklist.id, checklist);
+            });
+            trello_cards.set(card_id, card);
+        }
+
+        const fetchTrelloSourceLabels = async (board_id) => {
+            let labels = await Trello.rest('get', `boards/${board_id}/labels`);
+            let index = trello_boards.data.findIndex((element)=>element.id === board_id);
+            trello_boards.data[index].labels = labels;
+            return labels;
+        }
+
+        const hasLabel = (card, search_value, search_mode='id') => {
+            return card.labels.find(label=>{
+                return search_mode === 'name' && label.name === search_value || label.id === search_value;
+            });
+        }
+
+        const isCompleteInTargetCard = (card, target_card) => {
+
+        }
+
+        const attachLabel = async (card_id, label_id) => {
+            return await Trello.rest('post', `cards/${card_id}/idLabels`, {
+                value: label_id
+            });
+        }
+        const detachLabel = async (card_id, label_id) => {
+            return await Trello.rest('delete', `cards/${card_id}/idLabels/${label_id}`);
+        }
+
+        const getParentList = (card_id) => {
+            console.info('called getParentList()');
+            const card = trello_cards.get(card_id) || null;
+            let list, p = [];
+            if(card){
+                list = card.data.checklists || null;
+            }
+            if(list){
+                p = [...list.data.values()].filter(v=> v.name === PARENT_LIST_NAME);
+            }
+            return p[0] || {
+                id: null,
+                checkItems: []
+            };
+        }
+
+        const getChildList = (card_id) => {
+            console.info('called getChildList()');
+            const card = getTrelloCard(card_id) || null;
+            let list, p = [];
+            if (card) {
+                list = card.checklists || null;
+            }
+            if (list) {
+                p = [...list.data.values()].filter(v=> v.name === CHILD_LIST_NAME);
+            }
+            return p[0] || {
+                id: null,
+                checkItems: []
+            };
+        }
+
+        const addNodeChildList = (check_items) => {
+            console.log('called addNodeChildList()');
+            if(!Array.isArray(check_items)) {
+                return true;
+            }
+            check_items.forEach(check_item=>{
+                let container = $('#container_main_actions_child_task_template').clone(false);
+            });
+        }
+
+        const onDropdownStart = async (element) => {
+            const instance = M.Dropdown.getInstance(element);
+            switch ($(instance.el).data('trello-type')) {
+                case 'board':
+                    onOpenDropdownBoard(instance);
+                    break;
+                case 'list':
+                    onOpenDropdownList(instance);
+                    break;
+                case 'card':
+                    onOpenDropdownCard(instance);
+                    break;
+                default:
+                    break;
+            }
+            console.log(instance);
+        }
+
+        const getTrelloBoard = (board_id) => {
+            return trello_boards.data.find(element=>element.id === board_id);
+        }
+
+        const getTrelloList = (list_id) => {
+            const list = trello_lists.get(list_id);
+            return list && list.data || null;
+        }
+
+        const getTrelloCard = (card_id) => {
+            const card = trello_cards.get(card_id);
+            return card && card.data || null;
+        }
+
+        const getTrelloBoardLabels = (board_id) => {
+            let board = getTrelloBoard(board_id);
+            return board && board.labels;
+        }
+
+        const onOpenDropdownBoard = (dd_instance) => {
+            console.log('called onOpenDropdownBoard()');
+            const dd_element = $(dd_instance.dropdownEl);
+            const source_etag = dd_element.data('source-etag');
+            if(trello_boards.etag === "" || source_etag !== trello_boards.etag){
+                dd_element.data('board-id', '');
+                dd_element.children().each((index, dom) => {
+                    if (dom) {
+                        $(dome).off('click');
+                    }
+                });
+                dd_element.empty();
+                trello_boards.data.map((board) => {
+                    let li = document.createElement('li');
+                    $(li).data('board-id', board.id);
+                    $(li).click(()=>switchToBoard(li, dd_instance));
+                    let a = document.createElement('a');
+                    $(a).html(board.name);
+                    $(li).append(a).appendTo(dd_element);
+                });
+                dd_instance.recalculateDimensions();
+                dd_element.data('source-etag', trello_boards.etag);
+            }
+        }
+
+        const switchToBoard = async (board_element, dd_instance, selected_board_id = null) => {
+            console.log('called switchToBoard()');
+            const dd_element = $(dd_instance.dropdownEl);
+            const dd_button = $(dd_instance.el);
+            const side = dd_button.data('trimes-side');
+            const assoc_list_dd_button = $('.trello-list-container').find(`a.dropdown-trigger[data-associated-dropdown="${dd_element.attr('id')}"]`);
+            const assoc_list_dd_instance = assoc_list_dd_button && M.Dropdown.getInstance(assoc_list_dd_button) || null;
+            const board_id = board_element && $(board_element).data('board-id') || selected_board_id || null;
+            const board = board_id && getTrelloBoard(board_id) || null;
+
+            // no board selected
+            if(!board){
+                $(dd_button).html('select board');
+                dd_element.data('board-id', '');
+                dd_element.children().each((index, dom) => {
+                    if (dom) {
+                        $(dom).off('click');
+                    }
+                });
+                dd_element.empty();
+                dd_instance.recalculateDimensions();
+                if(assoc_list_dd_instance){
+                    await switchToList(null, assoc_list_dd_instance);
+                }
+                return board_id; // return board_id
+            }
+
+            Cookies.set(`trimes_${side}_board_id`, board_id);
+
+            dd_element.data('board-id', board_id);
+            if(board.labels === null) {
+                await fetchTrelloSourceLabels(board_id);
+            }
+            $(dd_button).html(`board: ${board.name}`);
+
+            // async fetch board labels
+            await fetchTrelloSourceLabels(board_id);
+            await fetchTrelloSourceLists(board_id);
+            //board switched
+            if(assoc_list_dd_instance && $(assoc_list_dd_instance.el).data('board-id') !== board_id){
+                await switchToList(null, assoc_list_dd_instance); // clear the list
+                $(assoc_list_dd_instance.el).data('board-id', board_id);
+            }
+            return board_id;
+        }
+
+        const switchToBoardById = async (board_id, side = 'main') => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const dd_trigger = $(`#container_${side_name}_board .dropdown-trigger`).get(0);
+            const dd_instance = M.Dropdown.getInstance(dd_trigger);
+            return await switchToBoard(null, dd_instance, board_id);
+        }
+
+        const onOpenDropdownList = (dd_instance) => {
+            console.log('called onOpenDropdownList()');
+            const dd_element = $(dd_instance.dropdownEl);
+            const dd_button = $(dd_instance.el);
+            const board_id = dd_button.data('board-id');
+            let board_lists = [];
+            if(dd_element.find('li').length === 0) {
+                trello_lists.forEach((item) => {
+                    if (item.data.idBoard === board_id) {
+                        board_lists.push(item.data);
+                    }
+                });
+                board_lists.map((item) => {
+                    console.log(item);
+                });
+                board_lists.map((list) => {
+                    let li = document.createElement('li');
+                    $(li).data('list-id', list.id);
+                    $(li).data('board-id', list.idBoard);
+                    $(li).click(() => switchToList(li, dd_instance));
+                    let a = document.createElement('a');
+                    $(a).html(list.name);
+                    $(li).append(a).appendTo(dd_element);
+                });
+                dd_instance.recalculateDimensions();
+            }
+        }
+
+        const switchToList = async (list_element, dd_instance, selected_list_id = null) => {
+            console.log('called switchToList()');
+            const dd_element = $(dd_instance.dropdownEl);
+            const dd_button = $(dd_instance.el);
+            const side = dd_button.data('trimes-side');
+            const assoc_card_dd_button = $('.trello-card-container').find(`a.dropdown-trigger[data-associated-dropdown="${dd_element.attr('id')}"]`);
+            const assoc_card_dd_instance = assoc_card_dd_button && M.Dropdown.getInstance(assoc_card_dd_button) || null;
+            const list_id = list_element && $(list_element).data('list-id') || selected_list_id || null;
+            const list = list_id && getTrelloList(list_id) || null;
+
+            // no list selected
+            if (!list) {
+                $(dd_button).html('select list');
+                dd_element.data('list-id', '');
+                dd_element.children().each((index, dom) => {
+                    if(dom){
+                        $(dom).off('click');
+                    }
+                });
+                dd_element.empty();
+                dd_instance.recalculateDimensions();
+                if (assoc_card_dd_instance) {
+                    await switchToCard(null, assoc_card_dd_instance);
+                }
+                return list_id;
+            }
+
+            Cookies.set(`trimes_${side}_list_id`, list_id);
+
+            dd_element.data('list-id', list_id);
+            $(dd_button).html(`list: ${list.name}`);
+            await fetchTrelloSourceCards(list_id);
+            //list switched
+            if (assoc_card_dd_instance && $(assoc_card_dd_instance.el).data('list-id') !== list_id) {
+                await switchToCard(null, assoc_card_dd_instance);
+                $(assoc_card_dd_instance.el).data('list-id', list_id);
+            }
+            return list_id;
+        }
+
+        const switchToListById = async (list_id, side = 'main') => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const dd_trigger = $(`#container_${side_name}_list .dropdown-trigger`).get(0);
+            const dd_instance = M.Dropdown.getInstance(dd_trigger);
+            await switchToList(null, dd_instance, list_id);
+        }
+
+        const onOpenDropdownCard = (dd_instance) => {
+            console.log('called onOpenDropdownCard()');
+            const dd_element = $(dd_instance.dropdownEl);
+            const dd_button = $(dd_instance.el);
+            const side = dd_button.data('trimes-side');
+            const list_id = dd_button.data('list-id');
+            let list_cards = [];
+            if (dd_element.find('li').length === 0) {
+                trello_cards.forEach((item) => {
+                    if (item.data.idList === list_id) {
+                        list_cards.push(item.data);
+                    }
+                });
+                list_cards.map((item) => {
+                    console.log(item);
+                });
+                list_cards.map((card) => {
+                    let li = document.createElement('li');
+                    $(li).data('card-id', card.id);
+                    $(li).data('list-id', card.idList);
+                    $(li).click(async () => {
+                        switchToCard(li, dd_instance).then(card_id=>{
+                            refreshCardBody(card_id, side);
+                        });
+                    });
+                    let a = document.createElement('a');
+                    $(a).html(card.name);
+                    $(li).append(a).appendTo(dd_element);
+                });
+                dd_instance.recalculateDimensions();
+            }
+        }
+
+        const switchToCard = async (card_element, dd_instance,
+            slected_card_id = null, task_history = false) => {
+            console.log('called switchToCard()');
+            const dd_element = $(dd_instance.dropdownEl);
+            const dd_button = $(dd_instance.el);
+            const side = dd_button.data('trimes-side');
+            const side_name = side === 'linked' && 'linked' || 'main';
+            let card_id = card_element && $(card_element).data('card-id') || slected_card_id || null;
+            let card = card_id && getTrelloCard(card_id) || null;
+
+            if(task_history) {
+                const last_task_url = getLastTaskUrlInHistory(side_name);
+                card = await loadCardByUrl(last_task_url);
+            }
+
+            // no card selected
+            if (!card) {
+                $(dd_button).html('select card');
+                dd_element.data('card-id', '');
+                dd_element.children().each((index, dom) => {
+                    if (dom) {
+                        $(dom).off('click');
+                    }
+                });
+                dd_element.empty();
+                dd_instance.recalculateDimensions();
+                return card_id;
+            }
+
+            const last_card_id = Cookies.get(`trimes_${side_name}_card_id`);
+
+            Cookies.set(`trimes_${side_name}_card_id`, card_id);
+
+            dd_element.data('card-id', card_id);
+            $(dd_button).html(`card: ${card.name}`);
+
+            // if switch to a different card, update load card history
+            if(!task_history && last_card_id !== card_id) {
+                const {data: last_card} = await loadTrelloSourceCard(last_card_id);
+                updateLoadTaskHistory(side_name, last_card.shortUrl);
+            } else if (task_history) {
+                updateLoadTaskHistory(side_name);
+            }
+            refreshTaskHistoryCount(side_name);
+
+            return card_id;
+        }
+
+        const switchToCardById = async (card_id, side = 'main', task_history = false) => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const dd_trigger = $(`#container_${side_name}_card .dropdown-trigger`).get(0);
+            const dd_instance = M.Dropdown.getInstance(dd_trigger);
+            await switchToCard(null, dd_instance, card_id, task_history);
+            await refreshCardBody(card_id, side_name);
+        }
+
+        const refreshCardFull = async (side, board_id, list_id, card_id, url, task_history = false) => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+
+            if (task_history) {
+                board_id = null;
+                list_id = null;
+                card_id = null;
+                url = getLastTaskUrlInHistory(side_name);
+            }
+
+            let card = url && await loadCardByUrl(url) ||
+                card_id && await loadTrelloSourceCard(card_id) && getTrelloCard(card_id) || null;
+
+            if(card && card.id) {
+                board_id = card.idBoard;
+                list_id = card.idList;
+                card_id = card.id;
+                $(`#input_${side_name}_load_card_url`).val(card.shortUrl);
+            }
+
+            if(board_id) {
+                await switchToBoardById(board_id, side);
+            }
+            if(list_id) {
+                await switchToListById(list_id, side);
+            }
+            if(card_id) {
+                await switchToCardById(card_id, side, task_history);
+            }
+        }
+
+        const refreshCardBody = async (card_id, side = 'main', clear = false) => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const card = getTrelloCard(card_id);
+            // update link url
+            $(`#input_${side_name}_load_card_url`).val(card.shortUrl);
+            Cookies.set(`trimes_${side}_load_card_url`, card.shortUrl);
+
+            // update main card
+            //card info
+            $(`#${side_name}_task_info`).html(card.name);
+            $(`#${side_name}_task_info`).data('card-id', card.id);
+
+            // update icon bar
+            let btn_show_task = $(`#iconbar_trimes_${side_name}_task .trimes-action-show-task`);
+            btn_show_task.data('board-id', card.idBoard);
+            btn_show_task.data('list-id', card.idList);
+            btn_show_task.data('card-id', card.id);
+
+
+            //create labels
+            const label_element = $(`#label_${side_name}_template`);
+            //clear existing labels created by another card
+            label_element.nextAll().each((index, element)=>element.remove());
+            let new_task = true;
+            card.labels.forEach(l=>{
+                let label = label_element.clone(false);
+                label.removeAttr('id')
+                .removeClass('hide')
+                .addClass('show')
+                .addClass(`trimes-label`)
+                .addClass(`trello-color-${l.color || 'no-color'}`)
+                .html(l.name);
+                label_element.after(label);
+                // task is done
+                if(l.name === TRIMES_LABEL_NAME_DONE) {
+                    new_task = false;
+                    //show done icon and hide others
+                    $(`#icon_${side_name}_task_new`).removeClass('show').addClass('hide');
+                    $(`#icon_${side_name}_task_complete`).removeClass('hide').addClass('show');
+                    $(`#icon_${side_name}_task_reopen`).removeClass('show').addClass('hide');
+                    //show reopen button and hide others
+                    $(`#btn_${side_name}_task_complete`).removeClass('show').addClass('hide');
+                    $(`#btn_${side_name}_task_reopen`).removeClass('hide').addClass('show');
+                } else if (l.name === TRIMES_LABEL_NAME_REOPEN) {
+                    new_task = false;
+                    //show reopen icon and hide others
+                    $(`#icon_${side_name}_task_new`).removeClass('show').addClass('hide');
+                    $(`#icon_${side_name}_task_complete`).removeClass('show').addClass('hide');
+                    $(`#icon_${side_name}_task_reopen`).removeClass('hide').addClass('show');
+                    //show done button and hide others
+                    $(`#btn_${side_name}_task_complete`).removeClass('hide').addClass('show');
+                    $(`#btn_${side_name}_task_reopen`).removeClass('show').addClass('hide');
+                }
+            });
+
+            // if it is a new task
+            if(new_task){
+                //show new icon and hide others
+                $(`#icon_${side_name}_task_new`).removeClass('hide').addClass('show');
+                $(`#icon_${side_name}_task_complete`).removeClass('show').addClass('hide');
+                $(`#icon_${side_name}_task_reopen`).removeClass('show').addClass('hide');
+                //show done button and hide others
+                $(`#btn_${side_name}_task_complete`).removeClass('hide').addClass('show');
+                $(`#btn_${side_name}_task_reopen`).removeClass('show').addClass('hide');
+            }
+
+            //update done and reopen button
+            $(`#btn_${side_name}_task_complete`).data('card-id', card_id);
+            $(`#btn_${side_name}_task_reopen`).data('card-id', card_id);
+
+            //set action buttons
+
+            await fetchTrelloSourceChecklists(card_id);
+            updateParentTaskList(card_id, side_name);
+            updateChildTaskList(card_id, side_name);
+            M.Tabs.getInstance($(`#tab_${side_name}`).get(0))
+                .select(`container_${side_name}_checklist_child_task`);
+        }
+
+        const updateParentTaskList = async (card_id, side = 'main') => {
+            return await updateSubTaskList(card_id, 'parent', side);
+        }
+
+        const getTaskHistory = (side) => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const cookies_key = TRIMES_TASK_HISTORY_COOKIES_KEY.replace('${side_name}', side_name);
+            const history = Cookies.get(cookies_key) || '';
+            return {
+                history_string: history,
+                history_urls: history && history.split(TRIMES_TASK_HISTORY_KEY_SEPARATOR) || []
+            };
+        }
+
+        const getLastTaskUrlInHistory = (side) => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const {history_string, history_urls} = getTaskHistory(side);
+            return history_urls.length > 0 && history_urls[history_urls.length - 1] || null;
+        }
+
+        const refreshTaskHistoryCount = (side) => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const {history_string, history_urls} = getTaskHistory(side);
+            $(`#iconbar_trimes_${side_name}_task .trimes-load-back-count`).html(history_urls.length);
+        }
+
+        const updateLoadTaskHistory = (side, url = null) => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const cookies_key = TRIMES_TASK_HISTORY_COOKIES_KEY.replace('${side_name}', side_name);
+            let {history_string, history_urls} = getTaskHistory(side_name);
+            // if no url provided, pop the last
+            if(!url && history_urls.length > 0) {
+                url = history_urls.pop();
+                // update Cookies
+                Cookies.set(cookies_key, history_urls.join(TRIMES_TASK_HISTORY_KEY_SEPARATOR));
+                // update display history count
+                refreshTaskHistoryCount(side_name);
+                return url;
+            } else if (url) {
+                // if the url is the same as the last one in history, skip this
+                if(!(history_urls.length > 0 && url === history_urls[history_urls.length - 1])) {
+                    // if total history count === TRIMES_TASK_HISTORY_MAX_COUNT, shift one
+                    if(history_urls.length === TRIMES_TASK_HISTORY_MAX_COUNT) {
+                    history_urls.shift();
+                    }
+                    // push the new one
+                    history_urls.push(url);
+                    // update Cookies
+                    Cookies.set(cookies_key, history_urls.join(TRIMES_TASK_HISTORY_KEY_SEPARATOR));
+                }
+                // update display history count
+                refreshTaskHistoryCount(side_name);
+                return url;
+            }
+        }
+
+        const onBtnShowCardClick = async event => {
+            event.stopPropagation();
+            const element = $(event.target);
+            const side_name = element.data('trimes-side') === 'main' && 'main' || 'linked';
+            const board_id = element.data('board-id');
+            const list_id = element.data('list-id');
+            const card_id = element.data('card-id');
+            if(!(board_id && list_id && card_id)){
+                M.toast({ html: `No card is selected to show on ${side_name} task!`});
+                return;
+            }
+            await refreshCardFull(side_name, board_id, list_id, card_id);
+            M.toast({ html: `card is loaded to ${side_name} task!`});
+        }
+
+        const updateSubTaskList = async (card_id, type = 'child', side = 'main') => {
+            const type_name = type === 'child' && 'child' || 'linked';
+            const side_name = side === 'linked' && 'linked' || 'main';
+            console.log(`called updateSubTaskList('${type_name}', '${side_name}')`);
+            const card = getTrelloCard(card_id);
+            const child_list = type_name === 'child' && getChildList(card_id)
+                || getParentList(card_id);
+
+            const main_node_root = $(`#container_${side_name}_checklist_${type_name}_task`);
+            const container_template = $(`#container_${side_name}_actions_${type_name}_task_template`);
+            const main_node_card_id = $(main_node_root).data('card-id');
+            // compare the child list with the nodes in the current list
+            // clear if card id are different
+            if(main_node_card_id != card_id){
+                main_node_root.find('div[data-type="sub-task"]').each((index, dom)=>{
+                    $(dom).find('.clickable').each((index1, dom1) => {
+                            if (dom1) {
+                                $(dom1).off('click');
+                            }
+                        }
+                    );
+                    // cleanup monitor typing on each child node
+                    $(dom).find('.monitor-typing').each((index, dom2)=>{
+                        clearMonitorTyping(dom2);
+                    });
+                });
+                main_node_root.empty();
+            }
+            //remove deleted tasks
+            main_node_root.find('div[data-type="sub-task"]').each((index, dom)=>{
+                let check_item_id = $(dom).attr('id');
+                let match = child_list.checkItems.filter(check_item=>check_item.id === check_item_id);
+                if(match && match[0]) {
+                    return;
+                }
+                clearTaskDom(dom);
+                $(dom).remove();
+            });
+            //add new tasks
+            let task_count = 0;
+            child_list.checkItems.forEach(check_item => {
+                task_count ++;
+                if(main_node_root.find(`div[id="${check_item.id}"]`).length > 0) {
+                        return;
+                }
+                let container = container_template.clone(false);
+                container.attr('id', check_item.id)
+                    .data('card-id', card_id)
+                    .data('checklist-id', check_item.idChecklist)
+                    .removeClass('hide')
+                    .addClass('show');
+
+                let input_url = container.find('input[data-type="url"]');
+                setUrlInput(input_url, check_item.name);
+
+                container.find('i.task-state-complete')
+                    .removeClass(check_item.state !== 'complete' && 'show' || 'hide')
+                    .addClass(check_item.state === 'complete' && 'show' || 'hide');
+
+                container.find('i.task-state-incomplete')
+                    .removeClass(check_item.state !== 'incomplete' && 'show' || 'hide')
+                    .addClass(check_item.state === 'incomplete' && 'show' || 'hide');
+
+                let cb_done = container.find('input[data-type="done"]');
+                cb_done.prop('checked', check_item.state === 'complete')
+                    .data('card-id', card_id)
+                    .data('check-item-id', check_item.id)
+                    .data('checklist-id', check_item.idChecklist)
+                    .data('state', check_item.state)
+                    .click(async (event) => {
+                        const dom = $(event.target);
+                        event.stopPropagation();
+                        event.preventDefault();
+                        setCheckItemState(
+                            dom.data('card-id'),
+                            dom.data('check-item-id'),
+                            dom.data('state') !== 'complete'
+                            ).then(data=>{
+                                dom.data('state', data.state);
+                                dom.prop('checked', data.state === 'complete')
+                                fetchTrelloSourceChecklists(dom.data('card-id'));
+                                M.toast( {html: "Task updated successfully."} );
+                            }).catch(e=>{
+                                console.error(e);
+                            });
+                    });
+
+                let btn_open_task = container.find('i[data-type="open-task"]');
+                btn_open_task.data('task-id', check_item.id)
+                    .data('monitor-typing-source',
+                        `#container_${side_name}_checklist_${type_name}_task #${check_item.id}`);
+                monitorTyping(btn_open_task.get(0), input_url.get(0));
+
+                setOpenTask(btn_open_task.get(0), input_url.get(0));
+
+                if(check_item.name !== ''){
+                    btn_open_task.removeClass('hide').addClass('show');
+                }
+
+                let btn_copy_url = container.find('i[data-type="copy-task-url"]');
+
+                setCopyTaskUrl(btn_copy_url.get(0), input_url.get(0));
+
+                let btn_delete_task = container.find('i[data-type="delete-task"]');
+                btn_delete_task.data('card-id', card_id)
+                    .data('check-item-id', check_item.id)
+                    .data('checklist-id', check_item.idChecklist)
+                    .click(async (event) => {
+                        event.stopPropagation();
+                        const dom = $(event.target);
+                        await deleteChildTask(dom.data('card-id'),
+                            dom.data('checklist-id'), dom.data('check-item-id'));
+                        M.toast( { html: 'Task item deleted successfully!'});
+                    });
+
+                let btn_show_task = container.find('.trimes-action-show-task');
+                    btn_show_task.click(onBtnShowCardClick);
+
+                //load card info and update task info
+                loadCardByUrl(check_item.name).then(child_card=>{
+                    btn_show_task.data('board-id', child_card.idBoard);
+                    btn_show_task.data('list-id', child_card.idList);
+                    btn_show_task.data('card-id', child_card.id);
+                    container.find('div.card-name span[data-type="card-name"]')
+                        .html(child_card.name);
+                    const label_template = $(`#label_${side_name}_template`);
+                    const label_container = container.find('.task-label-container');
+                    if(child_card.labels.length) {
+                        label_container.html('');
+                    }
+                    displayCardLabels(child_card, label_template, label_container);
+                });
+
+                let row = document.createElement('div');
+                $(row).addClass('col s12');
+                $(row).append(container);
+                main_node_root.append(row);
+            });
+            $(`#${side_name}_${type_name}_task_count`).html(task_count);
+            main_node_root.data('card-id', card_id);
+        }
+
+        const updateChildTaskList = async (card_id, side = 'main') => {
+            return await updateSubTaskList(card_id, 'child', side);
+        }
+
+        const displayCardLabels = (card, label_template, container) => {
+            card.labels.forEach((trello_label)=>{
+                let label = $(label_template).clone(false);
+                label.removeAttr('id')
+                    .removeClass('hide')
+                    .addClass('show')
+                    .addClass(`trimes-label`)
+                    .addClass(`trello-color-${trello_label.color || 'no-color'}`)
+                    .html(trello_label.name);
+                container.append(label);
+            });
+        }
+
+        const setCheckItemState = async (card_id, check_item_id, done = false) => {
+            return await Trello.rest('put',
+                `cards/${card_id}/checkItem/${check_item_id}`,
+                {
+                    state: done && 'complete' || 'incomplete'
+                });
+        }
+
+        const deleteChildTask = async (card_id, checklist_id, check_item_id) => {
+            console.log('called deleteChildTask()');
+            let card = getTrelloCard(card_id);
+            let child_list = getChildList(card_id);
+            let [check_item] = child_list.checkItems.filter(item=>item.id===check_item_id);
+            let from_card = await loadCardByUrl(check_item.name);
+            if(card && from_card){
+                await Promise.all([
+                Trello.rest('delete', `checklists/${checklist_id}/checkItems/${check_item_id}`),
+                deleteLinkedTask(card, from_card)
+                ]);
+            }
+            await fetchTrelloSourceChecklists(card_id);
+            updateChildTaskList(card_id);
+        }
+
+        const getTrelloShortLink = (url) => {
+            const regex = new RegExp('https:\/\/trello.com\/[a-zA-Z0-9]\/[a-zA-Z0-9]{8}');
+            let matches = regex.exec(url);
+            return matches && matches[0] || null;
+        }
+
+        const validateTrimesEndpointUrl = ()=>{
+            if ($('#input_trimes_endpoint_url').val() === '') {
+                $('#input_trimes_endpoint_url').val('https://');
+            }
+            if ($('#input_trimes_endpoint_url').val() === 'https://') {
+                return false;
+            }
+            return true;
+        }
+
+        const getSelectedBoard = (side = 'main') => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const board_id = $(`#dd_${side_name}_board`).data('board-id');
+            return getTrelloBoard(board_id);
+        }
+
+        const getSelectedList = (side = 'main') => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const list_id = $(`#dd_${side_name}_board`).data('board-id');
+            return getTrelloList(list_id);
+        }
+
+        const getSelectedCard = (side = 'main')=> {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const card_id =  $(`#dd_${side_name}_card`).data('card-id');
+            return getTrelloCard(card_id);
+        }
+
+        const addChildTask = async (side = 'main')=>{
+            console.log('called addChildTask()');
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const input_url = $(`#template_input_${side_name}_child_task_url`);
+            let child_task_url = String(input_url.val()).trim();
+            if(child_task_url ===''){
+                M.toast({ html: 'Child Task url is required!' });
+                return;
+            }
+
+            child_task_url = getTrelloShortLink(child_task_url);
+            if(!child_task_url) {
+                M.toast({ html: 'The input isn\'t a valid Trello url!' });
+                return;
+            }
+
+            input_url.val(child_task_url);
+
+            // cannot add self as child task
+            let parent_card = getSelectedCard(side_name);
+            if(String(parent_card.shortUrl).trim() === child_task_url) {
+                M.toast({ html: 'Cannot add itself as a child task!' });
+                return;
+            }
+
+            let to_card = await loadCardByUrl(child_task_url);
+            await addLinkedTask(parent_card, to_card);
+
+            const parent_card_id = parent_card && parent_card.id;
+            if (!parent_card_id) {
+                M.toast({ html: `Select a ${side_name} card first!` });
+                return;
+            }
+            // check wether the parent task already contain this child
+            let child_list = getChildList(parent_card_id);
+            let child_list_id = child_list && child_list.id;
+            const filter_func = child => child && String(child.name).trim() === child_task_url;
+            let existing_child = child_list.length > 0 &&
+                child_list.checkItems.filter(filter_func) || [];
+            // if no matching existing child, fetch the latest data from Trello and redo once
+            if(existing_child.length === 0) {
+                const remote_list = await Trello.rest('get', `cards/${parent_card_id}/checklists`);
+                existing_child = remote_list.length > 0 &&
+                    remote_list[0].checkItems.filter(filter_func) || [];
+            }
+
+            if(existing_child.length !== 0) {
+                M.toast({ html: 'Url exists as a child task already!' });
+                return;
+            }
+            //if no child list, create one
+            if(!child_list_id){
+                let checklist = await Trello.rest('post', 'checklists', {
+                    idCard: parent_card_id,
+                    name: CHILD_LIST_NAME,
+                    pos: '1'
+                });
+                //TODO: should validate the returned checklist
+                console.log(`checklist: ${CHILD_LIST_NAME} is `+
+                    `created on card (id: ${parent_card_id})`);
+                await loadTrelloSourceCard(parent_card_id, '0');
+                //refresh parent card and child list
+                parent_card = getSelectedCard(side_name);
+                child_list = getChildList(parent_card_id);
+                child_list_id = child_list && child_list.id;
+            }
+            //post new task
+            let check_items = await Trello.rest('post',
+                `checklists/${child_list_id}/checkItems`,
+                {
+                    name: child_task_url,
+                    pos: 'bottom',
+                    checked: 'false'
+                });
+            M.toast({ html: 'Task item added !'});
+            // reload checklists
+            await fetchTrelloSourceChecklists(parent_card_id);
+            child_list = getChildList(parent_card_id);
+            updateChildTaskList(parent_card_id, side_name);
+        }
+
+        const updateOpenUrlButton = (dom, url) => {
+            const trimmed_url = String(url).trim();
+            $(dom).data('url', trimmed_url);
+            if(trimmed_url !== '') {
+                $(dom).removeClass('hide').addClass('show');
+            } else {
+                $(dom).removeClass('show').addClass('hide');
+            }
+        }
+
+        const monitorTyping = (dom, source_dom = null) => {
+            const action = String($(dom).data('monitor-typing-action')).trim().toLowerCase();
+            const source_selector = $(dom).data('monitor-typing-source');
+            const monitor_dom = source_dom && $(source_dom) || $(source_selector);
+            const original_value = monitor_dom.data('original-value') || '';
+
+            const showHideOnTypingNotEmpty = (dom) => {
+                const current_input = String(monitor_dom.val()).trim();
+                if (current_input !== '') {
+                    $(dom).removeClass('hide').addClass('show');
+                } else {
+                    $(dom).removeClass('show').addClass('hide');
+                }
+            }
+
+            const showHideOnModified = (dom) => {
+                const current_input = String(monitor_dom.val()).trim();
+                if (current_input !== original_value) {
+                    $(dom).removeClass('hide').addClass('show');
+                } else {
+                    $(dom).removeClass('show').addClass('hide');
+                }
+            }
+
+            let onTyping =
+                action === 'showhide-on-typing-not-empty' && showHideOnTypingNotEmpty || null;
+            let onTypingDone =
+                action === 'showhide-on-modified' && showHideOnModified || null;
+
+            monitor_dom.on('input', (event) => {
+                delay(dom, 'slow', onTyping, onTypingDone);
+            });
+        }
+
+        const clearMonitorTyping = (dom) => {
+            const source_selector = $(dom).data('monitor-typing-source');
+            const source_dom = $(source_selector);
+            source_dom.off('input');
+        }
+
+        const setUrlInput = (element, url) => {
+            $(element).val(url).data('original-value', url);
+        }
+
+        const setOpenTask = (btn, input) => {
+            $(btn).click((event)=>{
+                event.stopPropagation();
+                const element = $(event.target);
+                const url = $(input).length && String($(input).data('original-value')).trim() || '';
+                if(url !== ''){
+                    window.open(url, element.data('opener'));
+                } else {
+                    M.toast({ html: 'Task item doesn\'t contain a valid url!' });
+                }
+            });
+        }
+
+        const setCopyTaskUrl = (btn, input) => {
+            $(btn).click((event)=>{
+                event.stopPropagation();
+                const element = $(event.target);
+                const copyText = $(input) && getTrelloShortLink(input.val())
+                    && $(input).get(0)|| null;
+                const cursorPos = copyText && copyText.selectionStart || 0;
+
+                if(copyText){
+                    copyText.select();
+                    copyText.setSelectionRange(0, $(input).val().length);
+                    copyText.setSelectionRange(cursorPos, cursorPos);
+                    document.execCommand('copy');
+                    M.toast({ html: 'Task url is copied to clipboard.' });
+                } else {
+                    M.toast({ html: 'Task item doesn\'t contain a valid url!' });
+                }
+            });
+        }
+
+        const copyText = (element) => {
+            element.select();
+            element.setSelectionRange(0, $(element).val().length);
+            document.execCommand('copy');
+            element.setSelectionRange(0, 0);
+            return true;
+        }
+
+        const clearTaskDom = (dom) => {
+            $(dom).find('.clickable').off('click');
+            $(dom).find('.monitor-typing').off('input');
+        };
+
+        const loadCardByUrl = async (url) => {
+            const short_link = getTrelloShortLink(url);
+            if(!short_link){
+                return Promise.reject('bad url');
+            }
+            return await $.getJSON(`${short_link}.json?key=${Trello.key()}&token=${Trello.token()}`);
+        }
+
+        const addLinkedTask = async (card, to_card) => {
+            //check parent task list on to_card
+            let to_card_checklists = await Trello.rest('get', `cards/${to_card.id}/checklists`);
+            let p = to_card_checklists.filter(v=> v.name === PARENT_LIST_NAME);
+            let checklist = p[0];
+            // no parent task list, create one
+            if(!checklist){
+                checklist = await Trello.rest('post', 'checklists', {
+                    idCard: to_card.id,
+                    name: PARENT_LIST_NAME,
+                    pos: '2'
+                });
+            }
+            // check whether card already exists in parent task list or not
+            let c = checklist.checkItems.filter(v=> v.name === card.shortUrl);
+            let check_item = c[0];
+            //already exists
+            if(check_item){
+                return true;
+            }
+            //add to checklist
+            check_item = await Trello.rest('post', `checklists/${checklist.id}/checkItems`,
+            {
+                name: card.shortUrl,
+                pos: 'bottom',
+                checked: 'false'
+            });
+            return check_item;
+        }
+
+        const deleteLinkedTask = async (card, from_card) => {
+            //check parent task list on to_card
+            let from_card_checklists = await Trello.rest('get', `cards/${from_card.id}/checklists`);
+            let p = from_card_checklists.filter(v=> v.name === PARENT_LIST_NAME);
+            let checklist = p[0];
+            // no parent task list, do nothing
+            if(!checklist){
+                return true;
+            }
+            // check whether card already exists in parent task list or not
+            let c = checklist.checkItems.filter(v=> v.name === card.shortUrl);
+            let check_item = c[0];
+            //not exists, do nothing
+            if(!check_item){
+                return true;
+            }
+            // delete check item
+            let result = await Trello.rest('delete',
+                `checklists/${check_item.idChecklist}/checkItems/${check_item.id}`);
+            return true;
+        }
+
+        const getTrimesLabel = (board_id, name) => {
+            const board = getTrelloBoard(board_id);
+            return board.labels.find(element=>element.name===name);
+        }
+
+        const checkLabelExistence = async (board_id, label_names = []) => {
+            let need_reload = false;
+            // get the labels
+            // if any label not exists, create one
+            let existing_labels = new Map(await Promise.all(label_names.map(async name =>{
+                const label = await getTrimesLabel(board_id, name);
+                if(!need_reload && !label) {
+                    need_reload = true;
+                }
+                return label && Promise.resolve([name, label]) ||
+                    Trello.rest('post', 'labels', {
+                        name: name,
+                        color: 'black',
+                        idBoard: board_id
+                    });
+            })));
+            if(need_reload){
+                await fetchTrelloSourceLabels(card.idBoard);
+            }
+
+            return true;
+
+        }
+
+        const completeTask = async (card_id, side = 'main') => {
+            console.log('callded reopenTask()');
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const card = getTrelloCard(card_id);
+
+            // if any label doesn't exist, create one
+            await checkLabelExistence(card.idBoard, [
+                TRIMES_LABEL_NAME_REOPEN, TRIMES_LABEL_NAME_DONE
+            ]);
+
+            let label_reopen = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_REOPEN);
+            let label_done = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_DONE);
+
+            // task can only complete when every child task is completed
+            const child_tasks = getChildList(card.id);
+            let all_done = true, has_reopen = false;
+            let checks = child_tasks.checkItems.map(async (check_item) => {
+                let child_task_card = await loadCardByUrl(check_item.name);
+                all_done = !hasLabel(child_task_card, TRIMES_LABEL_NAME_DONE, 'name') && false || all_done;
+                has_reopen = hasLabel(child_task_card, TRIMES_LABEL_NAME_REOPEN, 'name') && true || has_reopen;
+                return;
+            });
+            await Promise.all(checks);
+            if(!all_done || has_reopen){
+                M.toast({html: 'Cannot complete this task because one or more child task is\'t done.'});
+                return;
+            }
+
+            // if card has a reopen label, remove it.
+            // and if card doesn't have a done label, add it.
+            let [detached_done, attached_reopen] = await Promise.all([
+                hasLabel(card, label_reopen.id) && detachLabel(card.id, label_reopen.id) || Promise.resolve(false),
+                !hasLabel(card, label_done.id) && attachLabel(card.id, label_done.id) || Promise.resolve(false)
+            ]);
+
+            // mark it as complete on linked tasks
+            let check_items = await findCheckItemsInParentCard(card, 'incomplete');
+            await Promise.all(check_items.map(check_item=>{
+                return setCheckItemState(check_item.card.id, check_item.check_item.id, true);
+            }));
+
+            // reload the card
+            if(detached_done || attached_reopen){
+                await loadTrelloSourceCard(card_id, '0');
+                await refreshCardBody(card_id, side_name);
+            }
+        }
+
+        const reopenTask = async (card_id, side = 'main') => {
+            console.log('callded reopenTask()');
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const card = getTrelloCard(card_id);
+            // if any label doesn't exist, create one
+            await checkLabelExistence(card.idBoard, [
+                TRIMES_LABEL_NAME_REOPEN, TRIMES_LABEL_NAME_DONE
+            ]);
+
+            let label_reopen = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_REOPEN);
+            let label_done = getTrimesLabel(card.idBoard, TRIMES_LABEL_NAME_DONE);
+
+            // if card has a done label, remove it.
+            // and if card doesn't have a reopen label, add it.
+            let [detached_done, attached_reopen] = await Promise.all([
+                hasLabel(card, label_done.id) && detachLabel(card.id, label_done.id) || Promise.resolve(false),
+                !hasLabel(card, label_reopen.id) && attachLabel(card.id, label_reopen.id) || Promise.resolve(false)
+            ]);
+
+            // mark it as re-open on linked tasks
+            let check_items = await findCheckItemsInParentCard(card, 'complete');
+            await Promise.all(check_items.map(check_item=>{
+                return setCheckItemState(check_item.card.id, check_item.check_item.id, false);
+            }));
+            // reload the card
+            if(detached_done || attached_reopen){
+                await loadTrelloSourceCard(card_id, '0');
+                await refreshCardBody(card_id, side_name);
+            }
+        }
+
+        const findCheckItemsInParentCard = async (card, state = null) => {
+            const parent_list = getParentList(card.id);
+            let check_items = [];
+            let promises = parent_list.checkItems.map(async item => {
+                //get the parent task
+                let parent_card = await loadCardByUrl(item.name);
+                await loadTrelloSourceCard(parent_card.id, '0');
+                let child_list = getChildList(parent_card.id);
+                let check_item = child_list.checkItems.find(child_item=>child_item.name===card.shortUrl);
+               if(!check_item) {
+                   return false;
+               }
+               // there's a check_item for this card
+                if(state === null || check_item.state === state) {
+                    check_items.push({
+                        card: parent_card,
+                        check_item: check_item
+                    });
+                    return true;
+                }
+            });
+
+            await Promise.all(promises);
+
+            return check_items;
+        }
+
+        const extractIds = (side = 'main') => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            return {
+                board_id: $(`#dd_${side_name}_board`).data('board-id'),
+                list_id: $(`#dd_${side_name}_list`).data('list-id'),
+                card_id: $(`#dd_${side_name}_card`).data('card-id')
+            }
+        }
+
+        const saveInputs = () => {
+            Cookies.set('cookies_trimes_endpoint_url', $('#input_trimes_endpoint_url').val());
+        };
+
+        const autoConnect = async () => {
+            if (verifyCookiesConsent() && Cookies.get('trimes_auto_connect') === 'true') {
+                await connectToTrimesEndpoint();
+                return new Promise(resolve=>{
+                    window.addEventListener(EVENT_TRIMES_CONNECTED, ()=>{
+                        resolve(true);
+                    })
+                });
+            } else {
+                return false;
+            }
+        }
+
+        $('#btn_cookies_usage_notification').click((event)=>{
+            resetCookiesConsent();
+        });
+
+        $('#link_cookies_usage_consent').click((event)=>{
+            consentToUseCookies();
+        });
+
+        $('.tabs').tabs();
+
+        $('#input_trimes_endpoint_url').val(Cookies.get('cookies_trimes_endpoint_url') || '');
+
+        $('#btn_trimes_endpoint_url').click(async (event) => {
+            if (!validateTrimesEndpointUrl()) {
+                alert('Trimes Endpoint URL must not be empty!');
+            }
+            else {
+                await connectToTrimesEndpoint();
+            }
+        });
+
+        $('#input_trimes_endpoint_url').click((event) => {
+            validateTrimesEndpointUrl();
+        });
+
+        $('#cb_auto_connect').prop('checked', Cookies.get('trimes_auto_connect') === 'true');
+
+        $('#cb_auto_connect').click(async (event) => {
+            if($('#cb_auto_connect').prop('checked')){
+                Cookies.set('trimes_auto_connect', 'true');
+                M.toast( {html: 'Auto connect enabled.' });
+            } else {
+                Cookies.set('trimes_auto_connect', 'false');
+                M.toast({ html: 'Auto connect disabled.' });
+            }
+        });
+
+        $('.trimes-action-add-child-task').click(async (event)=>{
+            event.stopPropagation();
+            await addChildTask($(event.target).data('trimes-side'));
+        });
+
+        // initialize dropdowns
+        $('.dropdown-trigger').dropdown({
+            hover: false,
+            constrainWidth: false,
+            coverTrigger: false,
+            onOpenStart: async (element) => { await onDropdownStart(element);}
+        });
+
+        $('.monitor-typing').each((index, dom) =>{
+            monitorTyping(dom);
+        });
+
+        $('.trimes-action-reopen-task').click(async event=>{
+            event.stopPropagation();
+            const element = $(event.target);
+            const card_id = element.data('card-id');
+            const card = getTrelloCard(card_id);
+            await reopenTask(card.id, element.data('trimes-side'));
+        });
+
+        $('.trimes-action-complete-task').click(async event=>{
+            event.stopPropagation();
+            const element = $(event.target);
+            const card_id = element.data('card-id');
+            const card = getTrelloCard(card_id);
+            await completeTask(card.id, element.data('trimes-side'));
+        });
+
+        $('.trimes-action-load-card').click(async event=>{
+            event.stopPropagation();
+            const element = $(event.target);
+            const side = element.data('trimes-side');
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const source_element_id = element.data('source-input');
+
+            const card_url = getTrelloShortLink($(`#${source_element_id}`).val());
+
+            if(!card_url) {
+                M.toast({ html: 'The input isn\'t a valid Trello url!' });
+                return;
+            }
+
+            await refreshCardFull(side_name, null, null, null, card_url);
+        });
+
+        $('.trimes-action-swap-tasks').click(async event=>{
+            event.stopPropagation();
+            const {
+                board_id: main_board_id,
+                list_id: main_list_id,
+                card_id: main_card_id
+            } = extractIds('main');
+
+            const {
+                board_id: linked_board_id,
+                list_id: linked_list_id,
+                card_id: linked_card_id
+            } = extractIds('linked');
+
+            await Promise.all([
+                refreshCardFull('main', linked_board_id, linked_list_id, linked_card_id),
+                refreshCardFull('linked', main_board_id, main_list_id, main_card_id)
+            ]);
+            M.toast({ html: 'main task and linked task swapped!'});
+        });
+
+        // setup the main icon bar icons
+        $('#iconbar_trimes_main_task .trimes-action-show-task').click(onBtnShowCardClick);
+        setOpenTask(
+            $('#iconbar_trimes_main_task .trimes-action-open-task'),
+            $('#input_main_load_card_url'));
+        setCopyTaskUrl(
+            $('#iconbar_trimes_main_task .trimes-action-copy-link'),
+            $('#input_main_load_card_url')
+        );
+
+        // setup the linked icon bar icons
+        $('#iconbar_trimes_linked_task .trimes-action-show-task').click(onBtnShowCardClick);
+        setOpenTask(
+            $('#iconbar_trimes_linked_task .trimes-action-open-task'),
+            $('#input_linked_load_card_url'));
+        setCopyTaskUrl(
+            $('#iconbar_trimes_linked_task .trimes-action-copy-link'),
+            $('#input_linked_load_card_url')
+        );
+
+        $('.trimes-action-load-task-history').click(async event=>{
+            event.stopPropagation();
+            const element = $(event.currentTarget);
+            const side = element.data('trimes-side');
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const url = getLastTaskUrlInHistory(side_name);
+            await refreshCardFull(side_name, null, null, null, null, true);
+        });
+
+        await autoConnect().then(async connected=>{
+            if(connected){
+                setUrlInput($('#input_main_load_card_url'),
+                    Cookies.get('trimes_main_load_card_url') || '');
+                setUrlInput($('#input_linked_load_card_url'),
+                    Cookies.get('trimes_linked_load_card_url') || '');
+
+                await Promise.all(['main', 'linked'].map(side_name=>{
+                    const board_id = Cookies.get(`trimes_${side_name}_board_id`);
+                    const list_id = Cookies.get(`trimes_${side_name}_list_id`);
+                    const card_id = Cookies.get(`trimes_${side_name}_card_id`);
+                    return refreshCardFull(side_name,
+                            board_id !== 'null' && board_id || null,
+                            list_id !== 'null' && list_id || null,
+                            card_id !== 'null' && card_id || null,
+                        );
+                }));
+            }
+        });
+
+        console.info('page loaded.');
+    });
+    </script>
+</body>
+
+</html>

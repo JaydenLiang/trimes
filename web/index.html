@@ -430,12 +430,68 @@
                 <div class="row">
                     <div class="col s12">
                         <ul id="tab_main" class="tabs">
-                            <li class="tab col s6"><a href="#container_main_checklist_child_task">Child Tasks (<span id="main_child_task_count">0</span>)</a></li>
-                            <li class="tab col s6"><a href="#container_main_checklist_linked_task">Linked Tasks (<span id="main_linked_task_count">0</span>)</a></li>
+                            <li class="tab col s3"><a href="#container_main_checklist_child_task">Child Tasks (<span id="main_child_task_count">0</span>)</a></li>
+                            <li class="tab col s3"><a href="#container_main_checklist_linked_task">Linked Tasks (<span id="main_linked_task_count">0</span>)</a></li>
+                            <li class="tab col s3"><a href="#container_main_checklist_mantis">Mantis</a></li>
+                            <li class="tab col s3"><a href="#container_main_checklist_gitrepo">Git Repo</a></li>
                         </ul>
                     </div>
                     <div id="container_main_checklist_child_task" class="col s12"></div>
                     <div id="container_main_checklist_linked_task" class="col s12"></div>
+                    <div id="container_main_checklist_mantis" class="col s12">
+                        <div class="row">
+                            <div class="col s2">ID:</div>
+                            <div class="col s10 valign-wrapper">
+                                <span class="mantis-item-id"></span>
+                                <input class="mantis-item-link" type="hidden"/>
+                                <i class="small material-icons clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_mantis">open_in_new</i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s2">Status:</div>
+                            <div class="col s10 mantis-item-status"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col s2">Resolution:</div>
+                            <div class="col s10 mantis-item-resolution"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col s2">Dev Status:</div>
+                            <div class="col s10 mantis-item-dev-status"></div>
+                        </div>
+                    </div>
+                    <div id="container_main_checklist_gitrepo" class="col s12">
+                        <div id="container_main_checklist_gitrepo" class="col s12">
+                            <div class="row">
+                                <div class="col s2">Repo:</div>
+                                <div class="col s10 valign-wrapper">
+                                    <span class="gitrepo-item-repo"></span>
+                                    <input class="gitrepo-item-repo-link" type="hidden"/>
+                                    <i class="small material-icons hide clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_git">open_in_new</i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s2">Branch:</div>
+                                <div class="col s10 valign-wrapper">
+                                    <span class="gitrepo-item-branch"></span>
+                                    <input class="gitrepo-item-branch-link" type="hidden"/>
+                                    <i class="small material-icons hide clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_git">open_in_new</i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s2">Change Id:</div>
+                                <div class="col s10 valign-wrapper">
+                                    <span class="gitrepo-item-change"></span>
+                                    <input class="gitrepo-item-change-link" type="hidden"/>
+                                    <i class="small material-icons hide clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_git">open_in_new</i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s2">Dev Status:</div>
+                                <div class="col s10 mantis-item-dev-status"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- linked checklist: child task -->
@@ -443,12 +499,37 @@
                 <div class="row">
                     <div class="col s12">
                         <ul id="tab_linked" class="tabs">
-                            <li class="tab col s6"><a href="#container_linked_checklist_child_task">Child Tasks (<span id="linked_child_task_count">0</span>)</a></li>
-                            <li class="tab col s6"><a href="#container_linked_checklist_linked_task">Linked Tasks (<span id="linked_linked_task_count">0</span>)</a></li>
+                            <li class="tab col s3"><a href="#container_linked_checklist_child_task">Child Tasks (<span id="linked_child_task_count">0</span>)</a></li>
+                            <li class="tab col s3"><a href="#container_linked_checklist_linked_task">Linked Tasks (<span id="linked_linked_task_count">0</span>)</a></li>
+                            <li class="tab col s3"><a href="#container_linked_checklist_mantis">Mantis</a></li>
+                            <li class="tab col s3"><a href="#container_linked_checklist_gitrepo">Git Repo</a></li>
                         </ul>
                     </div>
                     <div id="container_linked_checklist_child_task" class="col s12"></div>
                     <div id="container_linked_checklist_linked_task" class="col s12"></div>
+                    <div id="container_linked_checklist_mantis" class="col s12">
+                        <div class="row">
+                            <div class="col s2">ID:</div>
+                            <div class="col s10 valign-wrapper">
+                                <span class="mantis-item-id"></span>
+                                <input class="mantis-item-link" type="hidden"/>
+                                <i class="small material-icons clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_linked_mantis">open_in_new</i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s2">Status:</div>
+                            <div class="col s10 mantis-item-status"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col s2">Resolution:</div>
+                            <div class="col s10 mantis-item-resolution"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col s2">Dev Status:</div>
+                            <div class="col s10 mantis-item-dev-status"></div>
+                        </div>
+                    </div>
+                    <div id="container_linked_checklist_gitrepo" class="col s12"></div>
                 </div>
             </div>
         </div>
@@ -475,7 +556,12 @@
     const TRIMES_TASK_HISTORY_MAX_COUNT = 20;
     const TRIMES_TASK_HISTORY_COOKIES_KEY = 'trimes_${side_name}_task_history';
     const TRIMES_TASK_HISTORY_KEY_SEPARATOR = '|***|';
-    const PARENT_LIST_NAME = 'parent-task', CHILD_LIST_NAME = 'child-tasks';
+    const PARENT_LIST_NAME = 'parent-task',
+        CHILD_LIST_NAME = 'child-tasks',
+        MANTIS_LIST_NAME = 'mantis',
+        GITREPO_LIST_NAME = 'git-repo';
+    const MANTIS_SERVER_ENDPOINT = 'https://mantis.fortinet.com/bug_view_page.php?bug_id=${id}',
+        GITREPO_SERVER_ENDPOINT = 'https://gerrit.fortinet.com/${query}';
     const TRIMES_LABEL_NAME_DONE = 'TR:DONE', TRIMES_LABEL_NAME_REOPEN = 'TR:RE-OPEN';
     let web_socket;
     let trello_boards = {etag: "", data: []}, trello_lists = new Map(), trello_cards = new Map();
@@ -519,6 +605,14 @@
                 })
             }
         };
+
+        const toggleElementVisibility = (elements, visible = true) => {
+            if ($(elements).length) {
+                $(elements).each((index, element)=>{
+                    $(element).removeClass(visible && 'hide' || 'show').addClass(visible && 'show' || 'hide');
+                });
+            }
+        }
 
         const verifyCookiesConsent = () => {
             console.info('called verifyCookiesConsent()');
@@ -1199,6 +1293,8 @@
             await fetchTrelloSourceChecklists(card_id);
             updateParentTaskList(card_id, side_name);
             updateChildTaskList(card_id, side_name);
+            updateMantisTab(card_id, side_name);
+            updateGitTab(card_id, side_name);
             M.Tabs.getInstance($(`#tab_${side_name}`).get(0))
                 .select(`container_${side_name}_checklist_child_task`);
         }
@@ -1865,6 +1961,170 @@
             await Promise.all(promises);
 
             return check_items;
+        }
+
+        const getMantisItem = (card_id) => {
+            console.info('called getMantisItem()');
+            const card = trello_cards.get(card_id) || null;
+            let list, p = [], m;
+            if (card) {
+                list = card.data.checklists || null;
+            }
+            if (list) {
+                p = [...list.data.values()].filter(v => v.name === MANTIS_LIST_NAME);
+            }
+            if(p[0] && p[0].checkItems) {
+                m = new Map(p[0].checkItems.map(check_item=>{
+                    const kv = check_item.name.split(': ');
+                    return [kv[0] && kv[0].trim().toLowerCase() || null, kv[1] !== null && kv[1] || null];
+                }).filter(kvp=>!!kvp[0]));
+            }
+            return m || new Map();
+        }
+
+        const updateMantisTab = async (card_id, side = 'main') => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const card = getTrelloCard(card_id);
+            const mantis = getMantisItem(card_id);
+
+            const main_node_root = $(`#container_${side_name}_checklist_mantis`);
+            if(mantis.has('id')) {
+                const mantis_item_link = main_node_root.find('.mantis-item-link');
+                main_node_root.find('.mantis-item-id').html(mantis.get('id'));
+                setUrlInput(mantis_item_link,
+                    MANTIS_SERVER_ENDPOINT.replace('${id}', mantis.get('id')));
+                setOpenTask(
+                    main_node_root.find('.trimes-action-open-task'),
+                    mantis_item_link
+                );
+            } else {
+                main_node_root.find('.mantis-item-id').html('');
+            }
+
+            if (mantis.has('status')) {
+                main_node_root.find('.mantis-item-status').html(mantis.get('status'));
+            } else {
+                main_node_root.find('.mantis-item-status').html('');
+            }
+
+            if (mantis.has('resolution')) {
+                main_node_root.find('.mantis-item-resolution').html(mantis.get('resolution'));
+            } else {
+                main_node_root.find('.mantis-item-resolution').html('');
+            }
+
+            if (mantis.has('dev-status')) {
+                main_node_root.find('.mantis-item-dev-status').html(mantis.get('dev-status'));
+            } else {
+                main_node_root.find('.mantis-item-dev-status').html('');
+            }
+        }
+
+        const getGitItem = (card_id) => {
+            console.info('called getGitItem()');
+            const card = trello_cards.get(card_id) || null;
+            let list, p = [], m;
+            if (card) {
+                list = card.data.checklists || null;
+            }
+            if (list) {
+                p = [...list.data.values()].filter(v => v.name === GITREPO_LIST_NAME);
+            }
+            if(p[0] && p[0].checkItems) {
+                m = new Map(p[0].checkItems.map(check_item=>{
+                    const kv = check_item.name.split(': ');
+                    return [kv[0] && kv[0].trim().toLowerCase() || null, kv[1] !== null && kv[1] || null];
+                }).filter(kvp=>!!kvp[0]));
+            }
+            return m || new Map();
+        }
+
+        const loadGerritItem = async (query) => {
+
+        }
+
+        const gerritQueryEncode = (encode_elements=[]) => {
+            return encode_elements.map(element=>{
+                return `${element[0]}${element[0] && ':' || ''}${encodeURIComponent(encodeURIComponent(element[1]))}`
+            }).join('+');
+        }
+
+        const updateGitTab = async (card_id, side = 'main') => {
+            const side_name = side === 'linked' && 'linked' || 'main';
+            const card = getTrelloCard(card_id);
+            const gitrepo = getGitItem(card_id);
+            const gerritItem = await loadGerritItem();
+
+            const main_node_root = $(`#container_${side_name}_checklist_gitrepo`);
+            let display_text = '', display_link = '';
+            let element_text, element_link, element_open_task;
+            let query = '';
+
+            element_text = main_node_root.find('.gitrepo-item-repo');
+            element_link = main_node_root.find('.gitrepo-item-repo-link');
+            element_open_task = element_text.siblings('.trimes-action-open-task');
+            if(gitrepo.has('repo')) {
+                query = gerritQueryEncode([['project', gitrepo.get('repo')]]);
+                element_text.html(gitrepo.get('repo'));
+                setUrlInput(element_link,
+                    GITREPO_SERVER_ENDPOINT.replace('${query}', `g/q/${query}`));
+                setOpenTask(element_open_task, element_link);
+                toggleElementVisibility(element_open_task, true);
+            } else {
+                element_text.html('');
+                toggleElementVisibility(element_open_task, false);
+            }
+
+            element_text = main_node_root.find('.gitrepo-item-branch');
+            element_link = main_node_root.find('.gitrepo-item-branch-link');
+            element_open_task = element_text.siblings('.trimes-action-open-task');
+            if(gitrepo.has('repo') && gitrepo.has('branch')) {
+                query = gerritQueryEncode([
+                    ['project', gitrepo.get('repo')],
+                    ['branch', gitrepo.get('branch')]
+                ]);
+                element_text.html(gitrepo.get('branch'));
+                setUrlInput(element_link,
+                    GITREPO_SERVER_ENDPOINT.replace('${query}', `g/q/${query}`));
+                setOpenTask(element_open_task, element_link);
+                toggleElementVisibility(element_open_task, true);
+            } else {
+                element_text.html('');
+                toggleElementVisibility(element_open_task, false);
+            }
+
+            element_text = main_node_root.find('.gitrepo-item-change');
+            element_link = main_node_root.find('.gitrepo-item-change-link');
+            element_open_task = element_text.siblings('.trimes-action-open-task');
+            if(gitrepo.has('change-id')) {
+                query = gerritQueryEncode([['', gitrepo.get('change-id')]]);
+                element_text.html(gitrepo.get('change-id'));
+                setUrlInput(element_link,
+                    GITREPO_SERVER_ENDPOINT.replace('${query}', `g/q/${query}`));
+                setOpenTask(element_open_task, element_link);
+                toggleElementVisibility(element_open_task, true);
+            } else {
+                element_text.html('');
+                toggleElementVisibility(element_open_task, false);
+            }
+
+            // if (mantis.has('status')) {
+            //     main_node_root.find('.mantis-item-status').html(mantis.get('status'));
+            // } else {
+            //     main_node_root.find('.mantis-item-status').html('');
+            // }
+
+            // if (mantis.has('resolution')) {
+            //     main_node_root.find('.mantis-item-resolution').html(mantis.get('resolution'));
+            // } else {
+            //     main_node_root.find('.mantis-item-resolution').html('');
+            // }
+
+            // if (mantis.has('dev-status')) {
+            //     main_node_root.find('.mantis-item-dev-status').html(mantis.get('dev-status'));
+            // } else {
+            //     main_node_root.find('.mantis-item-dev-status').html('');
+            // }
         }
 
         const extractIds = (side = 'main') => {

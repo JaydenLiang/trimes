@@ -1,0 +1,29 @@
+{
+  "name": "trimes-services",
+  "version": "0.0.0",
+  "description": "Trimes services.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JaydenLiang/trimes.git"
+  },
+  "author": "Jayden Liang (jaydenliang81@gmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JaydenLiang/trimes/issues"
+  },
+  "homepage": "https://github.com/JaydenLiang/trimes#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "chalk": "^3.0.0",
+    "commander": "^4.1.1",
+    "fastify": "^2.11.0",
+    "http-status-codes": "^1.4.0",
+    "puppeteer": "^2.1.1",
+    "tmp": "^0.1.0"
+  }
+}

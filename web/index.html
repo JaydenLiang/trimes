@@ -461,34 +461,45 @@
                         </div>
                     </div>
                     <div id="container_main_checklist_gitrepo" class="col s12">
-                        <div id="container_main_checklist_gitrepo" class="col s12">
-                            <div class="row">
-                                <div class="col s2">Repo:</div>
-                                <div class="col s10 valign-wrapper">
-                                    <span class="gitrepo-item-repo"></span>
-                                    <input class="gitrepo-item-repo-link" type="hidden"/>
-                                    <i class="small material-icons hide clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_git">open_in_new</i>
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="valign-wrapper">
+                                    <i class="small material-icons clickable trimes-action-update-gitrepo" data-trimes-side="main">add_box</i>
+                                    <i class="small material-icons clickable trimes-action-swap-tasks">cloud_download</i>
+                                    <i class="small material-icons clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_task">build</i>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col s2">Branch:</div>
-                                <div class="col s10 valign-wrapper">
-                                    <span class="gitrepo-item-branch"></span>
-                                    <input class="gitrepo-item-branch-link" type="hidden"/>
-                                    <i class="small material-icons hide clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_git">open_in_new</i>
+                        </div>
+                        <div class="row">
+                            <div id="container_main_gitrepo_body" class="col s12 hide">
+                                <div class="row">
+                                    <div class="col s2">Repo:</div>
+                                    <div class="col s10 valign-wrapper">
+                                        <span class="gitrepo-item-repo"></span>
+                                        <input class="gitrepo-item-repo-link" type="hidden" />
+                                        <i class="small material-icons hide clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_git">open_in_new</i>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col s2">Change Id:</div>
-                                <div class="col s10 valign-wrapper">
-                                    <span class="gitrepo-item-change"></span>
-                                    <input class="gitrepo-item-change-link" type="hidden"/>
-                                    <i class="small material-icons hide clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_git">open_in_new</i>
+                                <div class="row">
+                                    <div class="col s2">Branch:</div>
+                                    <div class="col s10 valign-wrapper">
+                                        <span class="gitrepo-item-branch"></span>
+                                        <input class="gitrepo-item-branch-link" type="hidden" />
+                                        <i class="small material-icons hide clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_git">open_in_new</i>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col s2">Dev Status:</div>
-                                <div class="col s10 mantis-item-dev-status"></div>
+                                <div class="row">
+                                    <div class="col s2">Change Id:</div>
+                                    <div class="col s10 valign-wrapper">
+                                        <span class="gitrepo-item-change"></span>
+                                        <input class="gitrepo-item-change-link" type="hidden" />
+                                        <i class="small material-icons hide clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_git">open_in_new</i>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s2">Dev Status:</div>
+                                    <div class="col s10 mantis-item-dev-status"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -529,7 +540,36 @@
                             <div class="col s10 mantis-item-dev-status"></div>
                         </div>
                     </div>
-                    <div id="container_linked_checklist_gitrepo" class="col s12"></div>
+                    <div id="container_linked_checklist_gitrepo" class="col s12">
+                        <div class="row">
+                            <div class="col s2">Repo:</div>
+                            <div class="col s10 valign-wrapper">
+                                <span class="gitrepo-item-repo"></span>
+                                <input class="gitrepo-item-repo-link" type="hidden" />
+                                <i class="small material-icons hide clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_git">open_in_new</i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s2">Branch:</div>
+                            <div class="col s10 valign-wrapper">
+                                <span class="gitrepo-item-branch"></span>
+                                <input class="gitrepo-item-branch-link" type="hidden" />
+                                <i class="small material-icons hide clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_git">open_in_new</i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s2">Change Id:</div>
+                            <div class="col s10 valign-wrapper">
+                                <span class="gitrepo-item-change"></span>
+                                <input class="gitrepo-item-change-link" type="hidden" />
+                                <i class="small material-icons hide clickable trimes-action-open-task" data-type="open-task" data-task-id="" data-opener="trimes_main_git">open_in_new</i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s2">Dev Status:</div>
+                            <div class="col s10 mantis-item-dev-status"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -545,6 +585,58 @@
                 <a id="link_cookies_usage_consent" class="modal-close waves-effect waves-green btn-flat">Agree & Close</a>
             </div>
         </div>
+        <div id="modal_gitrepo" class="modal bottom-sheet">
+            <div class="modal-content">
+                <h4>Update Associated Git Repo</h4>
+                <div class="row valign-wrapper">
+                    <div class="col s2">Repo</div>
+                    <div class="col s8">
+                        <input placeholder="child task Trello short link" type="text" class="validate">
+                    </div>
+                    <div class="col s2">
+                        <i id="modal_gitrepo_lock_edit" class="small material-icons">lock_open</i>
+                        <i id="modal_gitrepo_unlock_edit" class="small material-icons">lock</i>
+                    </div>
+                </div>
+                <div class="row valign-wrapper">
+                    <div class="col s2">Branch Type</div>
+                    <div class=" col s3 input-field">
+                        <span>
+                            <label>
+                                <input name="modal_gitrepo_branch_type" type="radio" checked />
+                                <span>Bugfix</span>
+                            </label>
+                        </span>
+                        <span>
+                            <label>
+                                <input name="modal_gitrepo_branch_type" type="radio" />
+                                <span>Feature</span>
+                            </label>
+                        </span>
+                    </div>
+                    <div class="col s2">Related Mantis</div>
+                    <div class="col s3"><input placeholder="Mantis Id?" type="text" class="validate"></div>
+                    <div class="col s2"></div>
+                </div>
+                <div class="row valign-wrapper">
+                    <div class="col s2">Base Branch</div>
+                    <div class=" col s8 input-field">
+                        <input id="input_modal_gitrepo_base_branch" placeholder="which branch is this branch based off?" type="text" class="validate">
+                        <select id='select_modal_gitrepo_base_branch' class="hide">
+                            <option value="" disabled selected>select a branch</option>
+                            <option>master</option>
+                            <option>feat_faz_integration</option>
+                        </select>
+                    </div>
+                    <div class="col s2">
+                        switch to: <a id="switch_modal_gitrepo_base_branch" class="waves-effect waves-light btn-small clickable trimes-switch" data-target='dd_modal_gitrepo_base_branch' data-trimes-options="type-in|list" data-storage-key="switch_modal_gitrepo_base_branch">select</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+            </div>
+        </div>
     </div>
     <!--JavaScript at end of body for optimized loading-->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -552,7 +644,9 @@
     <script type="module" src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs"></script>
     <script type="module">
     import Cookies from 'https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs'
-    const EVENT_TRIMES_CONNECTED = 'TrimesConnected';
+    const
+        EVENT_TRIMES_CONNECTED = 'TrimesConnected',
+        EVENT_TRIMES_SWITCH_CHANGED_FACE = 'TrimesSwitchChangedFace';
     const TRIMES_TASK_HISTORY_MAX_COUNT = 20;
     const TRIMES_TASK_HISTORY_COOKIES_KEY = 'trimes_${side_name}_task_history';
     const TRIMES_TASK_HISTORY_KEY_SEPARATOR = '|***|';
@@ -612,6 +706,35 @@
                     $(element).removeClass(visible && 'hide' || 'show').addClass(visible && 'show' || 'hide');
                 });
             }
+        }
+
+        const trimesifySwitch = () => {
+            $('.trimes-switch').each((index, element)=>{
+                const faces = $(element).data('trimes-options').split('|');
+                const storage_key = $(element).data('storage-key');
+                let default_index = storage_key && Cookies.get(storage_key) || 0;
+                const setFace = (face_index) => {
+                    if($(element).is('input')) {
+                        $(element).val(faces[face_index]);
+                    } else {
+                        $(element).html(faces[face_index]);
+                    }
+                    $(element).data('trimes-switch-face', face_index);
+                    if(storage_key) {
+                        Cookies.set(storage_key, face_index);
+                    }
+                }
+                // use the 1st face as default
+                setFace(default_index);
+                $(element).click(event=>{
+                    event.stopPropagation();
+                    const fi = $(element).data('trimes-switch-face');
+                    // if current face index is 0, then switch to face index 1, otherwise, index 0
+                    const face_index = fi === 0 && 1 || 0;
+                    setFace(face_index);
+                    $(event.target).trigger(EVENT_TRIMES_SWITCH_CHANGED_FACE, face_index);
+                });
+            });
         }
 
         const verifyCookiesConsent = () => {
@@ -1294,7 +1417,7 @@
             updateParentTaskList(card_id, side_name);
             updateChildTaskList(card_id, side_name);
             updateMantisTab(card_id, side_name);
-            updateGitTab(card_id, side_name);
+            updateGitRepoTab(card_id, side_name);
             M.Tabs.getInstance($(`#tab_${side_name}`).get(0))
                 .select(`container_${side_name}_checklist_child_task`);
         }
@@ -2049,7 +2172,7 @@
             }).join('+');
         }
 
-        const updateGitTab = async (card_id, side = 'main') => {
+        const updateGitRepoTab = async (card_id, side = 'main') => {
             const side_name = side === 'linked' && 'linked' || 'main';
             const card = getTrelloCard(card_id);
             const gitrepo = getGitItem(card_id);
@@ -2151,6 +2274,10 @@
             } else {
                 return false;
             }
+        }
+
+        const openModalUpdateGitRepo = (event) => {
+            let modal = M.Modal.getInstance($('.trimes-action-update-gitrepo.modal-trigger'));
         }
 
         $('#btn_cookies_usage_notification').click((event)=>{
@@ -2289,6 +2416,36 @@
             const url = getLastTaskUrlInHistory(side_name);
             await refreshCardFull(side_name, null, null, null, null, true);
         });
+
+        $('.trimes-action-update-gitrepo').click(event=>{
+            let m = M.Modal.getInstance($('#modal_gitrepo'));
+            m.open();
+        });
+
+        let m = M.Modal.getInstance($('#modal_gitrepo'));
+        m.open();
+
+        trimesifySwitch();
+
+        M.FormSelect.init($('#select_modal_gitrepo_base_branch'), {
+            classes: Cookies.get($('#switch_modal_gitrepo_base_branch').data('storage-key')) === "0" && 'show' || 'hide'
+        });
+
+        toggleElementVisibility($('#input_modal_gitrepo_base_branch'),
+            Cookies.get($('#switch_modal_gitrepo_base_branch').data('storage-key')) === "1");
+
+        $('#switch_modal_gitrepo_base_branch').on(EVENT_TRIMES_SWITCH_CHANGED_FACE,
+            (event, face_index)=>{
+                const instance = M.FormSelect.getInstance($('#select_modal_gitrepo_base_branch'));
+                if(face_index === 1) {
+                    toggleElementVisibility($('#input_modal_gitrepo_base_branch'), true);
+                    toggleElementVisibility($(instance.wrapper), false);
+                } else {
+                    toggleElementVisibility($('#input_modal_gitrepo_base_branch'), false);
+                    toggleElementVisibility($(instance.wrapper), true);
+                }
+            }
+        );
 
         await autoConnect().then(async connected=>{
             if(connected){

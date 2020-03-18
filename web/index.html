@@ -471,7 +471,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div id="container_main_gitrepo_body" class="col s12 hide">
+                            <div id="container_main_gitrepo_body" class="col s12">
                                 <div class="row">
                                     <div class="col s2">Repo:</div>
                                     <div class="col s10 valign-wrapper">
@@ -591,25 +591,12 @@
                 <div class="row valign-wrapper">
                     <div class="col s2">Repo</div>
                     <div class="col s8">
-                        <input placeholder="git repo name in Gerrit" type="text" class="validate">
+                        <input id="input_gitrepo_repo_name" placeholder="git repo name" type="text" class="validate">
                     </div>
                     <div class="col s2">
-                        <i id="modal_gitrepo_lock_edit" class="small material-icons">lock_open</i>
-                        <i id="modal_gitrepo_unlock_edit" class="small material-icons">lock</i>
-                    </div>
-                </div>
-                <div class="row valign-wrapper">
-                    <div class="col s2">Base Branch</div>
-                    <div class=" col s8 input-field">
-                        <input id="input_modal_gitrepo_base_branch" placeholder="which branch is this branch based off?" type="text" class="validate">
-                        <select id='select_modal_gitrepo_base_branch' class="hide">
-                            <option value="" disabled selected>select a branch</option>
-                            <option>master</option>
-                            <option>feat_faz_integration</option>
-                        </select>
-                    </div>
-                    <div class="col s2">
-                        switch to: <a id="switch_modal_gitrepo_base_branch" class="waves-effect waves-light btn-small clickable trimes-switch" data-target='dd_modal_gitrepo_base_branch' data-trimes-options="type-in|list" data-storage-key="switch_modal_gitrepo_base_branch">select</a>
+                        <i id="btn_gitrepo_save" class="small material-icons">save</i>
+                        <i id="btn_gitrepo_lock_edit" class="small material-icons">lock_open</i>
+                        <i id="btn_gitrepo_unlock_edit" class="small material-icons">lock</i>
                     </div>
                 </div>
                 <div class="row valign-wrapper">
@@ -617,60 +604,65 @@
                     <div class=" col s2 input-field">
                         <span>
                             <label>
-                                <input name="modal_gitrepo_branch_type" type="radio" checked />
+                                <input name="cb_gitrepo_branch_type" type="radio" checked />
+                                <span>Feature</span>
+                            </label>
+                        </span>
+                        <span>
+                            <label>
+                                <input name="cb_gitrepo_branch_type" type="radio" />
                                 <span>Bugfix</span>
                             </label>
                         </span>
                         <span>
                             <label>
-                                <input name="modal_gitrepo_branch_type" type="radio" />
-                                <span>Feature</span>
+                                <input name="cb_gitrepo_branch_type" type="radio" />
+                                <span>PR</span>
+                            </label>
+                        </span>
+                        <span>
+                            <label>
+                                <input name="cb_gitrepo_branch_type" type="radio" />
+                                <span>Other</span>
                             </label>
                         </span>
                     </div>
                     <div class="col s2 right-align">Related Mantis</div>
-                    <div class="col s1"><input placeholder="Mantis Id?" type="text" class="validate"></div>
+                    <div class="col s1"><input id="input_gitrepo_mantis_id" placeholder="Mantis Id?" type="text" class="validate"></div>
                     <div class="col s2 right-align">Related Version</div>
-                    <div class="col s1"><input placeholder="Mantis Id?" type="text" class="validate"></div>
+                    <div class="col s1"><input id="input_gitrepo_version" placeholder="Version?" type="text" class="validate"></div>
                     <div class="col s2"></div>
                 </div>
                 <div class="row valign-wrapper">
                     <div class="col s2">Branch name</div>
                     <div class="col s8">
-                        <input placeholder="target branch to submit to" type="text" class="validate">
+                        <input id="input_gitrepo_branch_name" placeholder="target branch to submit to" type="text" class="validate">
                     </div>
                     <div class="col s2 valign-wrapper">
-                        <a id="switch_modal_gitrepo_base_branch" class="waves-effect waves-light btn-small clickable"><i class="material-icons right">spellcheck</i>suggested</a>
+                        <a id="btn_gitrepo_suggested_branch_name" class="waves-effect waves-light btn-small clickable"><i class="material-icons right">spellcheck</i>suggested</a>
                     </div>
                 </div>
                 <div class="row valign-wrapper">
-                    <div class="col s2">Change Id (Tip)</div>
-                    <div class="col s5 input-field">
+                    <div class="col s2">Merge Change Id</div>
+                    <div class="col s4 input-field">
+                        <input id="input_gitrepo_change_id" placeholder="Gerrit Change Id" type="text" class="validate">
+                    </div>
+                    <div class="col s2 right-align">Gerrit #</div>
+                    <div class="col s2 input-field">
                         <input id="input_modal_gitrepo_change_id" placeholder="Gerrit Change Id" type="text" class="validate">
                     </div>
-                    <div class="col s1">Status</div>
-                    <div class="col s2 input-field">
+                    <div class="col s2"></div>
+                </div>
+                <div class="row valign-wrapper">
+                    <div class="col s2">Status</div>
+                    <div class="col s8 input-field">
                         <a class="chip trello-color-sky">ACTIVE</a><a class="chip trello-color-green">MERGED</a>
                     </div>
                     <div class="col s2 valign-wrapper"><a id="switch_modal_gitrepo_base_branch" class="waves-effect waves-light btn-small clickable"><i class="material-icons right">sync</i>sync</a></div>
                 </div>
-                <div class="row valign-wrapper">
-                    <div class="col s2">Related Change(s)</div>
-                    <div class="col s5 input-field">
-                        <select id='select_modal_gitrepo_change_id' class="">
-                            <option value="" disabled selected>History Changes</option>
-                            <option>I6fbae93f618d003c9f96904f79cd43200b3bce2d</option>
-                            <option>I6fbae93f618d003c9f96904f79cd43200b3bce2d</option>
-                            <option>I6fbae93f618d003c9f96904f79cd43200b3bce2d</option>
-                            <option>I6fbae93f618d003c9f96904f79cd43200b3bce2d</option>
-                            <option>I6fbae93f618d003c9f96904f79cd43200b3bce2d</option>
-                        </select>
-                    </div>
-                    <div class="col s5"></div>
-                </div>
             </div>
             <div class="modal-footer">
-                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
             </div>
         </div>
     </div>
@@ -1935,55 +1927,72 @@
             return await $.getJSON(`${short_link}.json?key=${Trello.key()}&token=${Trello.token()}`);
         }
 
+        const getCheckList = async (card_id, name) => {
+            let checklists = await Trello.rest('get', `cards/${card_id}/checklists`);
+            let c = checklists.filter(v=> v.name === name);
+            return c[0];
+        }
+
+        const createCheckList = async (card_id, name) => {
+            return await Trello.rest('post', 'checklists', {
+                idCard: card_id,
+                name: name,
+                pos: '0' // TODO: which number can refer to the last position?
+            });
+        }
+
+        const getCheckItem = (checklist, value, key = null) => {
+            const name = key && `${key}: ${value}` || value;
+            let c = checklist.checkItems.filter(v=> v.name === name);
+            return c[0];
+        }
+
+        const createCheckItem = async (checklist_id, value, key = null, checked = false) => {
+            return await Trello.rest('post', `checklists/${checklist_id}/checkItems`,
+            {
+                name: key && `${key}: ${value}` || value,
+                pos: 'bottom',
+                checked: checked && 'true' || 'false'
+            });
+        }
+
+        const deleteCheckItem = async (checklist_id, item_id) => {
+            return await Trello.rest('delete', `checklists/${checklist_id}/checkItems/${item_id}`);
+        }
+
         const addLinkedTask = async (card, to_card) => {
-            //check parent task list on to_card
-            let to_card_checklists = await Trello.rest('get', `cards/${to_card.id}/checklists`);
-            let p = to_card_checklists.filter(v=> v.name === PARENT_LIST_NAME);
-            let checklist = p[0];
+            //get parent task list on to_card
+            let checklist = await getCheckList(to_card.id, PARENT_LIST_NAME);
             // no parent task list, create one
             if(!checklist){
-                checklist = await Trello.rest('post', 'checklists', {
-                    idCard: to_card.id,
-                    name: PARENT_LIST_NAME,
-                    pos: '2'
-                });
+                checklist = await createCheckList(to_card.id, PARENT_LIST_NAME);
             }
             // check whether card already exists in parent task list or not
             let c = checklist.checkItems.filter(v=> v.name === card.shortUrl);
-            let check_item = c[0];
+            let check_item = getCheckItem(checklist, card.shortUrl);
             //already exists
             if(check_item){
                 return true;
             }
             //add to checklist
-            check_item = await Trello.rest('post', `checklists/${checklist.id}/checkItems`,
-            {
-                name: card.shortUrl,
-                pos: 'bottom',
-                checked: 'false'
-            });
-            return check_item;
+            return await createCheckItem(checklist.id, card.shortUrl);
         }
 
         const deleteLinkedTask = async (card, from_card) => {
             //check parent task list on to_card
-            let from_card_checklists = await Trello.rest('get', `cards/${from_card.id}/checklists`);
-            let p = from_card_checklists.filter(v=> v.name === PARENT_LIST_NAME);
-            let checklist = p[0];
+            let checklist = await getCheckList(from_card.id, PARENT_LIST_NAME);
             // no parent task list, do nothing
             if(!checklist){
                 return true;
             }
             // check whether card already exists in parent task list or not
-            let c = checklist.checkItems.filter(v=> v.name === card.shortUrl);
-            let check_item = c[0];
+            let check_item = getCheckItem(checklist, card.shortUrl);
             //not exists, do nothing
             if(!check_item){
                 return true;
             }
             // delete check item
-            let result = await Trello.rest('delete',
-                `checklists/${check_item.idChecklist}/checkItems/${check_item.id}`);
+            await deleteCheckItem(check_item.idChecklist, check_item.id);
             return true;
         }
 
